@@ -66,10 +66,6 @@ export default function DashboardPage() {
     }
   };
 
-  const handleLogout = () => {
-    AuthService.logout();
-    router.push('/login');
-  };
 
   if (loading) {
     return (
@@ -108,9 +104,6 @@ export default function DashboardPage() {
                 Add Transaction
               </Button>
             </Link>
-            <Button onClick={handleLogout} variant="outline">
-              Logout
-            </Button>
           </div>
         </div>
 
