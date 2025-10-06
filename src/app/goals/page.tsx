@@ -160,9 +160,18 @@ export default function GoalsPage() {
   });
 
   const formatAmount = (amount: number, currency: string) => {
+    if (currency === 'LBP') {
+      // Format LBP with LBP symbol and no decimals
+      return `LBP ${amount.toLocaleString('en-US', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0
+      })}`;
+    }
+    
+    // Format USD with $ symbol
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency: currency === 'LBP' ? 'USD' : currency,
+      currency: 'USD',
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
     }).format(amount);

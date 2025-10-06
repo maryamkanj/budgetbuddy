@@ -4,16 +4,24 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Goal } from '@/types/goal';
 import { Target, Calendar, DollarSign } from 'lucide-react';
-
 interface GoalsProgressProps {
   goals: Goal[];
 }
 
 export function GoalsProgress({ goals }: GoalsProgressProps) {
   const formatAmount = (amount: number, currency: string) => {
+    if (currency === 'LBP') {
+      // For LBP, we'll show the LBP symbol and format with commas
+      return `LBP ${amount.toLocaleString('en-US', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+      })}`;
+    }
+    
+    // For other currencies, use standard currency formatting
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency: currency === 'LBP' ? 'USD' : currency,
+      currency: currency,
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
     }).format(amount);
@@ -22,7 +30,6 @@ export function GoalsProgress({ goals }: GoalsProgressProps) {
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
-      month: 'short',
       day: 'numeric'
     });
   };

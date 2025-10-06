@@ -4,7 +4,8 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { AuthService } from '@/lib/auth';
 import { localStorageService } from '@/lib/localStorage';
-import { dashboardUtils, DashboardSummary } from '@/lib/dashboard-utils';
+import { DashboardSummary, calculateSummary, calculateGoalProgress, checkSalaryAllocation } from '@/lib/dashboard-utils';
+import { convertToUSD, formatCurrency } from '@/lib/currency-utils';
 import { User } from '@/types/user';
 import { Transaction } from '@/types/transaction';
 import { Goal } from '@/types/goal';
@@ -56,7 +57,7 @@ export default function DashboardPage() {
       setAllocations(userAllocations);
 
       // Calculate dashboard summary
-      const dashboardSummary = dashboardUtils.calculateSummary(userTransactions, userSalary?.currency || 'USD');
+      const dashboardSummary = calculateSummary(userTransactions, userSalary?.currency || 'USD');
       setSummary(dashboardSummary);
     } catch (error) {
       console.error('Error loading user data:', error);
@@ -86,8 +87,8 @@ export default function DashboardPage() {
   }
 
   const currency = salary?.currency || 'USD';
-  const goalProgress = dashboardUtils.calculateGoalProgress(goals);
-  const allocationPercentage = salary ? dashboardUtils.checkSalaryAllocation(salary.baseSalary, allocations) : 0;
+  const goalProgress = calculateGoalProgress(goals);
+  const allocationPercentage = salary ? checkSalaryAllocation(salary.baseSalary, allocations) : 0;
 
   return (
     <div className="min-h-screen bg-gray-50">

@@ -1,6 +1,7 @@
 import { Transaction } from '@/types/transaction';
 import { Goal } from '@/types/goal';
 import { SalaryAllocation } from '@/types/salary';
+import { convertToUSD } from './currency-utils';
 
 export interface DashboardSummary {
   totalSpending: number;
@@ -28,7 +29,7 @@ function calculateWeeklyTrends(transactions: Transaction[]): { week: string; spe
     const diffTime = Math.abs(now.getTime() - transactionDate.getTime());
     const diffWeeks = Math.ceil(diffTime / (1000 * 60 * 60 * 24 * 7));
     
-    if (diffWeeks > 0 && diffWeeks <= 4) {
+    if (diffWeeks <= 4) {
       const weekKey = `Week${diffWeeks}`;
       if (transaction.type === 'Spending') {
         weeks[weekKey].spending += transaction.amount;
@@ -45,68 +46,71 @@ function calculateWeeklyTrends(transactions: Transaction[]): { week: string; spe
   }));
 }
 
-export const dashboardUtils = {
-  calculateSummary(transactions: Transaction[] = [], currency: 'USD' | 'LBP' = 'USD'): DashboardSummary {
-    if (!transactions || transactions.length === 0) {
-      return {
-        totalSpending: 0,
-        totalSaving: 0,
-        netAmount: 0,
-        spendingByCategory: [],
-        weeklyTrends: []
-      };
-    }
+export function calculateSummary(transactions: Transaction[] = [], currency: 'USD' | 'LBP' = 'USD'): DashboardSummary {
+  // Convert all amounts to USD for consistent calculations
+  const transactionsInUSD = transactions.map(tx => ({
+    ...tx,
+    amount: convertToUSD(tx.amount, tx.currency)
+  }));
 
-    const filteredTransactions = transactions.filter(t => t.currency === currency);
-    
-    const totalSpending = filteredTransactions
-      .filter(t => t.type === 'Spending')
-      .reduce((sum, t) => sum + t.amount, 0);
+  if (transactionsInUSD.length === 0) {
+    return {
+      totalSpending: 0,
+      totalSaving: 0,
+      netAmount: 0,
+      spendingByCategory: [],
+      weeklyTrends: []
+    };
+  }
 
-    const totalSaving = filteredTransactions
-      .filter(t => t.type === 'Saving')
-      .reduce((sum, t) => sum + t.amount, 0);
+  // Calculate totals
+  const totalSpending = transactionsInUSD
+    .filter(t => t.type === 'Spending')
+    .reduce((sum, t) => sum + t.amount, 0);
 
-    const netAmount = totalSaving - totalSpending;
+  const totalSaving = transactionsInUSD
+    .filter(t => t.type === 'Saving')
+    .reduce((sum, t) => sum + t.amount, 0);
 
-    // Calculate spending by category
-    const spendingTransactions = filteredTransactions.filter(t => t.type === 'Spending');
-    const categoryMap = new Map<string, number>();
-    
-    spendingTransactions.forEach(transaction => {
-      const category = transaction.category === 'Other' ? transaction.userCategory || 'Other' : transaction.category;
-      const current = categoryMap.get(category) || 0;
-      categoryMap.set(category, current + transaction.amount);
+  const netAmount = totalSaving - totalSpending;
+
+  // Calculate spending by category
+  const spendingByCategory: Record<string, number> = {};
+  transactionsInUSD
+    .filter(t => t.type === 'Spending' && t.category)
+    .forEach(t => {
+      spendingByCategory[t.category!] = (spendingByCategory[t.category!] || 0) + t.amount;
     });
 
-    const spendingByCategory = Array.from(categoryMap.entries()).map(([category, amount]) => ({
-      category,
-      amount,
-      percentage: totalSpending > 0 ? (amount / totalSpending) * 100 : 0
-    }));
+  const totalSpendingForCategories = Object.values(spendingByCategory).reduce((sum, amount) => sum + amount, 0);
+  
+  const spendingByCategoryArray = Object.entries(spendingByCategory).map(([category, amount]) => ({
+    category,
+    amount,
+    percentage: totalSpendingForCategories > 0 ? (amount / totalSpendingForCategories) * 100 : 0
+  }));
 
-    // Calculate weekly trends (last 4 weeks)
-    const weeklyTrends = calculateWeeklyTrends(filteredTransactions);
+  // Calculate weekly trends (using transactions in USD)
+  const weeklyTrends = calculateWeeklyTrends(transactionsInUSD);
 
-    return {
-      totalSpending,
-      totalSaving,
-      netAmount,
-      spendingByCategory,
-      weeklyTrends
-    };
-  },
+  return {
+    totalSpending,
+    totalSaving,
+    netAmount,
+    spendingByCategory: spendingByCategoryArray,
+    weeklyTrends
+  };
+}
 
-  calculateGoalProgress(goals: Goal[]): { active: number; completed: number; failed: number } {
-    const active = goals.filter(g => g.status === 'Active').length;
-    const completed = goals.filter(g => g.status === 'Completed').length;
-    const failed = goals.filter(g => g.status === 'Failed').length;
-    
-    return { active, completed, failed };
-  },
+export function calculateGoalProgress(goals: Goal[] = []): { active: number; completed: number; failed: number } {
+  const active = goals.filter(g => g.status === 'Active').length;
+  const completed = goals.filter(g => g.status === 'Completed').length;
+  const failed = goals.filter(g => g.status === 'Failed').length;
+  
+  return { active, completed, failed };
+}
 
-  checkSalaryAllocation(salary: number, allocations: SalaryAllocation[]): number {
-    const totalAllocated = allocations.reduce((sum, alloc) => sum + alloc.percentage, 0);
-    return totalAllocated;
-  }
-};
+export function checkSalaryAllocation(salary: number, allocations: SalaryAllocation[] = []): number {
+  const totalAllocated = allocations.reduce((sum, alloc) => sum + alloc.percentage, 0);
+  return totalAllocated;
+}

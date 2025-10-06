@@ -6,6 +6,7 @@ import { AuthService } from '@/lib/auth';
 import { localStorageService } from '@/lib/localStorage';
 import { Transaction, CATEGORIES } from '@/types/transaction';
 import { User } from '@/types/user';
+import { convertToUSD, formatCurrency } from '@/lib/currency-utils';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -126,19 +127,21 @@ export default function TransactionsPage() {
 
   const filteredTransactions = transactions.filter(transaction => {
     const matchesFilter = filter === 'all' || transaction.type.toLowerCase() === filter;
-    const matchesSearch = transaction.note?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    const matchesSearch = searchTerm === '' || 
+                         transaction.note?.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          transaction.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         transaction.userCategory?.toLowerCase().includes(searchTerm.toLowerCase());
+                         (transaction.userCategory?.toLowerCase().includes(searchTerm.toLowerCase()) || false);
     return matchesFilter && matchesSearch;
   });
 
-  const formatAmount = (amount: number, currency: string) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: currency === 'LBP' ? 'USD' : currency,
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(amount);
+  // Use the formatCurrency utility for consistent formatting
+  const formatAmount = (amount: number, currency: 'USD' | 'LBP') => {
+    return formatCurrency(amount, currency);
+  };
+
+  // Convert amount to USD for calculations
+  const getAmountInUSD = (amount: number, currency: 'USD' | 'LBP'): number => {
+    return convertToUSD(amount, currency);
   };
 
   if (!user) {
