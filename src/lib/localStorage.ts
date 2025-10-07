@@ -2,7 +2,6 @@ import { User } from '@/types/user';
 import { Transaction } from '@/types/transaction';
 import { Goal } from '@/types/goal';
 import { Salary, SalaryAllocation } from '@/types/salary';
-import { Achievement } from '@/types/achievement';
 
 const STORAGE_KEYS = {
   USERS: 'budgetbuddy_users',
@@ -11,11 +10,10 @@ const STORAGE_KEYS = {
   GOALS: 'budgetbuddy_goals',
   SALARIES: 'budgetbuddy_salaries',
   SALARY_ALLOCATIONS: 'budgetbuddy_salary_allocations',
-  ACHIEVEMENTS: 'budgetbuddy_achievements'
 };
 
 export const localStorageService = {
-  // Users management (existing code remains the same)
+  // Users management
   getUsers(): User[] {
     if (typeof window === 'undefined') return [];
     const users = localStorage.getItem(STORAGE_KEYS.USERS);
@@ -34,7 +32,6 @@ export const localStorageService = {
       id: this.generateId(),
       createdAt: new Date().toISOString()
     };
-    
     users.push(newUser);
     this.setUsers(users);
     return newUser;
@@ -47,7 +44,10 @@ export const localStorageService = {
 
   verifyUser(email: string, password: string): User | null {
     const user = this.findUserByEmail(email);
-    return user && user.password === password ? user : null;
+    if (user && user.password === password) {
+      return user;
+    }
+    return null;
   },
 
   // Current user session
@@ -86,7 +86,6 @@ export const localStorageService = {
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     };
-    
     transactions.push(newTransaction);
     this.setTransactions(transactions);
     return newTransaction;
@@ -117,7 +116,6 @@ export const localStorageService = {
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     };
-    
     goals.push(newGoal);
     this.setGoals(goals);
     return newGoal;
@@ -147,7 +145,6 @@ export const localStorageService = {
       id: this.generateId(),
       createdAt: new Date().toISOString()
     };
-    
     salaries.push(newSalary);
     this.setSalaries(salaries);
     return newSalary;
@@ -177,7 +174,6 @@ export const localStorageService = {
       id: this.generateId(),
       createdAt: new Date().toISOString()
     };
-    
     allocations.push(newAllocation);
     this.setSalaryAllocations(allocations);
     return newAllocation;
@@ -187,37 +183,7 @@ export const localStorageService = {
     const allocations = this.getSalaryAllocations();
     return allocations.filter(allocation => allocation.salaryId === salaryId);
   },
-
-  // Achievements
-  getAchievements(): Achievement[] {
-    if (typeof window === 'undefined') return [];
-    const achievements = localStorage.getItem(STORAGE_KEYS.ACHIEVEMENTS);
-    return achievements ? JSON.parse(achievements) : [];
-  },
-
-  setAchievements(achievements: Achievement[]): void {
-    if (typeof window === 'undefined') return;
-    localStorage.setItem(STORAGE_KEYS.ACHIEVEMENTS, JSON.stringify(achievements));
-  },
-
-  addAchievement(achievement: Omit<Achievement, 'id'>): Achievement {
-    const achievements = this.getAchievements();
-    const newAchievement: Achievement = {
-      ...achievement,
-      id: this.generateId(),
-      achievedAt: new Date().toISOString()
-    };
     
-    achievements.push(newAchievement);
-    this.setAchievements(achievements);
-    return newAchievement;
-  },
-
-  getAchievementsByUserId(userId: string): Achievement[] {
-    const achievements = this.getAchievements();
-    return achievements.filter(achievement => achievement.userId === userId);
-  },
-
   // Utility functions
   generateId(): string {
     return Date.now().toString(36) + Math.random().toString(36).substr(2);
@@ -239,11 +205,6 @@ export const localStorageService = {
     const existingSalaries = this.getSalaries();
     if (existingSalaries.length === 0) {
       this.setSalaries([]);
-    }
-    
-    const existingAchievements = this.getAchievements();
-    if (existingAchievements.length === 0) {
-      this.setAchievements([]);
     }
   }
 };

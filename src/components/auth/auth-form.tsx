@@ -9,6 +9,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { AuthService } from '@/lib/auth';
 import { toast } from 'sonner';
 import { Eye, EyeOff, Mail, Lock, User, TrendingUp, Check, X } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface AuthFormProps {
   mode: 'login' | 'register';
@@ -24,6 +25,7 @@ interface PasswordRequirements {
 
 export function AuthForm({ mode }: AuthFormProps) {
   const router = useRouter();
+  const { setUser } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -79,6 +81,7 @@ export function AuthForm({ mode }: AuthFormProps) {
       }
 
       if (result.success && result.user) {
+        setUser(result.user);
         toast.success(mode === 'register' ? 'Account created successfully!' : 'Welcome back!');
         router.push('/dashboard');
       } else {

@@ -12,7 +12,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Plus, Edit, Trash2, Filter, Search } from 'lucide-react';
+import { Plus, Edit, Trash2, Filter, Search, Trophy, Star, Zap } from 'lucide-react';
 import { toast } from 'sonner';
 
 export default function TransactionsPage() {
@@ -22,6 +22,8 @@ export default function TransactionsPage() {
   const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null);
   const [filter, setFilter] = useState<'all' | 'spending' | 'saving'>('all');
   const [searchTerm, setSearchTerm] = useState('');
+  
+  
   const router = useRouter();
 
   const [formData, setFormData] = useState({
@@ -49,7 +51,7 @@ export default function TransactionsPage() {
     setTransactions(userTransactions.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) return;
 
@@ -79,6 +81,7 @@ export default function TransactionsPage() {
         // Add new transaction
         const newTransaction = localStorageService.addTransaction(transactionData);
         setTransactions(prev => [newTransaction, ...prev]);
+        
         toast.success('Transaction added successfully');
       }
 
@@ -108,6 +111,7 @@ export default function TransactionsPage() {
     const updatedTransactions = transactions.filter(t => t.id !== transactionId);
     localStorageService.setTransactions(updatedTransactions);
     setTransactions(updatedTransactions);
+    
     toast.success('Transaction deleted successfully');
   };
 
@@ -139,11 +143,6 @@ export default function TransactionsPage() {
     return formatCurrency(amount, currency);
   };
 
-  // Convert amount to USD for calculations
-  const getAmountInUSD = (amount: number, currency: 'USD' | 'LBP'): number => {
-    return convertToUSD(amount, currency);
-  };
-
   if (!user) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -167,6 +166,52 @@ export default function TransactionsPage() {
             <Plus className="h-4 w-4 mr-2" />
             Add Transaction
           </Button>
+        </div>
+
+{/* Quick Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <Card>
+            <CardContent className="p-4">
+              <div className="text-center">
+                <div className="text-2xl font-bold text-green-600">
+                  {formatCurrency(
+                    transactions
+                      .filter(t => t.type === 'Saving')
+                      .reduce((sum, t) => sum + convertToUSD(t.amount, t.currency), 0),
+                    'USD'
+                  )}
+                </div>
+                <p className="text-sm text-gray-600">Total Saved</p>
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardContent className="p-4">
+              <div className="text-center">
+                <div className="text-2xl font-bold text-red-600">
+                  {formatCurrency(
+                    transactions
+                      .filter(t => t.type === 'Spending')
+                      .reduce((sum, t) => sum + convertToUSD(t.amount, t.currency), 0),
+                    'USD'
+                  )}
+                </div>
+                <p className="text-sm text-gray-600">Total Spent</p>
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardContent className="p-4">
+              <div className="text-center">
+                <div className="text-2xl font-bold text-blue-600">
+                  {transactions.length}
+                </div>
+                <p className="text-sm text-gray-600">Total Transactions</p>
+              </div>
+            </CardContent>
+          </Card>
         </div>
 
         {/* Filters */}
@@ -324,7 +369,7 @@ export default function TransactionsPage() {
             ) : (
               <div className="space-y-4">
                 {filteredTransactions.map((transaction) => (
-                  <div key={transaction.id} className="flex items-center justify-between p-4 border rounded-lg">
+                  <div key={transaction.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 transition-colors">
                     <div className="flex items-center gap-4">
                       <div className={`p-3 rounded-full ${
                         transaction.type === 'Spending' ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600'

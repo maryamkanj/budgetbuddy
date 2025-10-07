@@ -1,25 +1,22 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { useEffect, useState } from 'react';
+import { Menu, X, PieChart, Target, DollarSign } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
 import { AuthService } from '@/lib/auth';
-import { User } from '@/types/user';
-import { PieChart, Target, DollarSign, Trophy, Menu, X } from 'lucide-react';
 
 export default function Header() {
-  const [user, setUser] = useState<User | null>(null);
+  const { user, setUser } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const pathname = usePathname();
 
-  useEffect(() => {
-    const currentUser = AuthService.getCurrentUser();
-    setUser(currentUser);
-  }, []);
-
   const handleLogout = () => {
+    // This will trigger a re-render through the AuthContext
     AuthService.logout();
+    setUser(null);
     window.location.href = '/';
   };
 
@@ -29,9 +26,7 @@ export default function Header() {
     { name: 'Dashboard', href: '/dashboard', icon: PieChart },
     { name: 'Transactions', href: '/transactions', icon: DollarSign },
     { name: 'Goals', href: '/goals', icon: Target },
-    { name: 'Salary', href: '/salaries', icon: DollarSign },
-    { name: 'Achievements', href: '/achievements', icon: Trophy },
-  ];
+    { name: 'Salary', href: '/salaries', icon: DollarSign },  ];
 
   return (
     <header className="bg-white shadow-sm border-b">

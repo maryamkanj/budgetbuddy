@@ -1,130 +1,148 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { TrendingUp, Target, PieChart, DollarSign, Shield, Smartphone } from 'lucide-react';
+import { TrendingUp, Target, PieChart, DollarSign } from 'lucide-react';
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+    <div className="min-h-screen bg-white">
       {/* Hero Section */}
-      <section className="container mx-auto px-4 py-16 text-center">
-        <h1 className="text-5xl font-bold text-gray-900 mb-6">
-          Take Control of Your
-          <span className="text-blue-600"> Finances</span>
+      <section className="container mx-auto px-4 py-12 md:py-16 text-center">
+        <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-3">
+          Simple Budget Tracking
         </h1>
-        <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-          BudgetBuddy helps you track spending, set goals, and build better financial habits with intuitive tools and gamified achievements.
+        <p className="text-base sm:text-lg text-gray-600 mb-6 max-w-md mx-auto">
+          Track spending, set goals, and manage your salary in one place.
         </p>
-        
+        <Link href="/register">
+          <Button size="lg" className="bg-blue-600 hover:bg-blue-700">
+            Get Started
+          </Button>
+        </Link>
       </section>
 
       {/* Features Section */}
-      <section className="container mx-auto px-4 py-16">
-        <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">
-          Everything You Need to Master Your Money
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <Card>
-            <CardHeader>
-              <div className="flex items-center gap-3 mb-2">
-                <div className="p-2 bg-blue-100 rounded-lg">
-                  <PieChart className="h-6 w-6 text-blue-600" />
+      <section className="container mx-auto px-4 py-8 md:py-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+          <Card className="border-0 shadow-sm">
+            <CardHeader className="pb-2">
+              <div className="flex justify-center mb-2">
+                <div className="p-2 bg-blue-50 rounded-full">
+                  <PieChart className="h-5 w-5 text-blue-600" />
                 </div>
-                <CardTitle>Smart Tracking</CardTitle>
               </div>
-              <CardDescription>
-                Track spending and savings across categories with intuitive charts and insights.
-              </CardDescription>
+              <CardTitle className="text-center text-base">Track Spending</CardTitle>
             </CardHeader>
+            <CardContent>
+              <CardDescription className="text-center text-sm">
+                Log expenses by category with USD/LBP support
+              </CardDescription>
+            </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader>
-              <div className="flex items-center gap-3 mb-2">
-                <div className="p-2 bg-green-100 rounded-lg">
-                  <Target className="h-6 w-6 text-green-600" />
+          <Card className="border-0 shadow-sm">
+            <CardHeader className="pb-2">
+              <div className="flex justify-center mb-2">
+                <div className="p-2 bg-green-50 rounded-full">
+                  <Target className="h-5 w-5 text-green-600" />
                 </div>
-                <CardTitle>Goal Setting</CardTitle>
               </div>
-              <CardDescription>
-                Set financial goals and track your progress with visual progress bars and deadlines.
-              </CardDescription>
+              <CardTitle className="text-center text-base">Set Goals</CardTitle>
             </CardHeader>
+            <CardContent>
+              <CardDescription className="text-center text-sm">
+                Create financial goals and track your progress
+              </CardDescription>
+            </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader>
-              <div className="flex items-center gap-3 mb-2">
-                <div className="p-2 bg-purple-100 rounded-lg">
-                  <TrendingUp className="h-6 w-6 text-purple-600" />
+          <Card className="border-0 shadow-sm">
+            <CardHeader className="pb-2">
+              <div className="flex justify-center mb-2">
+                <div className="p-2 bg-purple-50 rounded-full">
+                  <TrendingUp className="h-5 w-5 text-purple-600" />
                 </div>
-                <CardTitle>Salary Planning</CardTitle>
               </div>
-              <CardDescription>
-                Allocate your salary across categories and stay within your budget limits.
-              </CardDescription>
+              <CardTitle className="text-center text-base">Salary Planning</CardTitle>
             </CardHeader>
+            <CardContent>
+              <CardDescription className="text-center text-sm">
+                Allocate your salary across categories
+              </CardDescription>
+            </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader>
-              <div className="flex items-center gap-3 mb-2">
-                <div className="p-2 bg-yellow-100 rounded-lg">
-                  <DollarSign className="h-6 w-6 text-yellow-600" />
+          <Card className="border-0 shadow-sm">
+            <CardHeader className="pb-2">
+              <div className="flex justify-center mb-2">
+                <div className="p-2 bg-orange-50 rounded-full">
+                  <DollarSign className="h-5 w-5 text-orange-600" />
                 </div>
-                <CardTitle>Dual Currency</CardTitle>
               </div>
-              <CardDescription>
-                Support for both USD and LBP currencies to match your financial reality.
-              </CardDescription>
+              <CardTitle className="text-center text-base">Dual Currency</CardTitle>
             </CardHeader>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <div className="flex items-center gap-3 mb-2">
-                <div className="p-2 bg-red-100 rounded-lg">
-                  <Shield className="h-6 w-6 text-red-600" />
-                </div>
-                <CardTitle>Local & Secure</CardTitle>
-              </div>
-              <CardDescription>
-                Your data stays on your device. No cloud storage, complete privacy.
+            <CardContent>
+              <CardDescription className="text-center text-sm">
+                Full support for USD and LBP
               </CardDescription>
-            </CardHeader>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <div className="flex items-center gap-3 mb-2">
-                <div className="p-2 bg-indigo-100 rounded-lg">
-                  <Smartphone className="h-6 w-6 text-indigo-600" />
-                </div>
-                <CardTitle>Mobile First</CardTitle>
-              </div>
-              <CardDescription>
-                Responsive design that works perfectly on all your devices.
-              </CardDescription>
-            </CardHeader>
+            </CardContent>
           </Card>
         </div>
       </section>
 
+      {/* How It Works */}
+      <section className="bg-gray-50 py-8 md:py-12">
+        <div className="container mx-auto px-4">
+          <h2 className="text-xl sm:text-2xl font-bold text-center text-gray-900 mb-6 md:mb-8">
+            How BudgetBuddy Works
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 max-w-4xl mx-auto">
+            <div className="text-center">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-2">
+                <span className="text-blue-600 font-bold text-xs sm:text-sm">1</span>
+              </div>
+              <h3 className="font-semibold mb-1 text-sm sm:text-base">Log Transactions</h3>
+              <p className="text-gray-600 text-xs sm:text-sm">
+                Record spending and savings by category with optional notes
+              </p>
+            </div>
+            
+            <div className="text-center">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-2">
+                <span className="text-green-600 font-bold text-xs sm:text-sm">2</span>
+              </div>
+              <h3 className="font-semibold mb-1 text-sm sm:text-base">Set Your Budget</h3>
+              <p className="text-gray-600 text-xs sm:text-sm">
+                Allocate your salary and create financial goals
+              </p>
+            </div>
+            
+            <div className="text-center">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-2">
+                <span className="text-purple-600 font-bold text-xs sm:text-sm">3</span>
+              </div>
+              <h3 className="font-semibold mb-1 text-sm sm:text-base">Track Progress</h3>
+              <p className="text-gray-600 text-xs sm:text-sm">
+                View charts and insights to stay on track
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* CTA Section */}
-      <section className="container mx-auto px-4 py-16 text-center">
-        <Card className="max-w-2xl mx-auto bg-blue-600 text-white">
-          <CardContent className="pt-6">
-            <h3 className="text-2xl font-bold mb-4">Ready to Transform Your Finances?</h3>
-            <p className="mb-6 opacity-90">
-              Join thousands of users who have taken control of their financial future with BudgetBuddy.
-            </p>
-            <Link href="/register">
-              <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100">
-                Start Your Journey Today
-              </Button>
-            </Link>
-          </CardContent>
-        </Card>
+      <section className="container mx-auto px-4 py-8 md:py-12 text-center">
+        <div className="max-w-md mx-auto">
+          <h3 className="text-lg sm:text-xl font-bold mb-2">Start Managing Your Money</h3>
+          <p className="text-gray-600 mb-4 text-sm sm:text-base">
+            Take control of your finances today.
+          </p>
+          <Link href="/register">
+            <Button size="lg" className="bg-blue-600 hover:bg-blue-700 w-full sm:w-auto">
+              Create Your Account
+            </Button>
+          </Link>
+        </div>
       </section>
     </div>
   );
