@@ -155,6 +155,17 @@ export const localStorageService = {
     return salaries.find(salary => salary.userId === userId);
   },
 
+  deleteSalary(salaryId: string): void {
+    const salaries = this.getSalaries();
+    const updatedSalaries = salaries.filter(salary => salary.id !== salaryId);
+    this.setSalaries(updatedSalaries);
+    
+    // Also remove any allocations for this salary
+    const allocations = this.getSalaryAllocations();
+    const updatedAllocations = allocations.filter(alloc => alloc.salaryId !== salaryId);
+    this.setSalaryAllocations(updatedAllocations);
+  },
+
   // Salary Allocations
   getSalaryAllocations(): SalaryAllocation[] {
     if (typeof window === 'undefined') return [];

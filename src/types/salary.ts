@@ -1,6 +1,7 @@
 export interface Salary {
     id: string;
     userId: string;
+    name?: string;
     baseSalary: number;
     currency: 'USD' | 'LBP';
     createdAt: string;
