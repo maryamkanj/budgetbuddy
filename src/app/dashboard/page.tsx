@@ -215,26 +215,6 @@ export default function DashboardPage() {
               </CardContent>
             </Card>
 
-            {/* Quick Stats */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Quick Stats</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <div className="flex justify-between">
-                  <span className="text-sm text-gray-600">Total Transactions</span>
-                  <span className="font-medium">{transactions.length}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-sm text-gray-600">Completed Goals</span>
-                  <span className="font-medium text-green-600">{goalProgress.completed}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-sm text-gray-600">Active Goals</span>
-                  <span className="font-medium text-blue-600">{goalProgress.active}</span>
-                </div>
-              </CardContent>
-            </Card>
           </div>
         </div>
       </div>
