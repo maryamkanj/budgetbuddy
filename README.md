@@ -1,36 +1,85 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# BudgetBuddy
 
-## Getting Started
+BudgetBuddy is a personal finance management application that helps you track your spending, set financial goals, and manage your budget effectively. Built with Next.js, TypeScript, and Tailwind CSS, it provides a clean and intuitive interface for managing your finances.
 
-First, run the development server:
+## ✨ Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- 💰 **Track Spending & Savings**
+  - Log transactions with categories (Food, Transport, Bills, Entertainment, Other)
+  - Support for custom categories
+  - Track both spending and saving transactions
+  - View transaction history with timestamps
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- 📊 **Dashboard & Analytics**
+  - Interactive pie charts for category breakdown
+  - Bar charts for spending trends (weekly/monthly)
+  - Summary of total savings vs spending
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- 🎯 **Financial Goals**
+  - Set and track financial goals
+  - Monitor progress with visual indicators
+  - Goal status tracking (Active, Completed, Failed)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- 💼 **Salary Management**
+  - Track multiple income sources
+  - Allocate salary to different categories
+  - Monitor spending against your budget
 
-## Learn More
+## 🚀 Getting Started
 
-To learn more about Next.js, take a look at the following resources:
+### Prerequisites
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Node.js (v18 or later)
+- npm or yarn
+- Git (optional)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Installation
 
-## Deploy on Vercel
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/maryamkanj/budgetbuddy.git
+   cd budgetbuddy
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+2. **Install dependencies**
+   ```bash
+   npm install
+   # or
+   yarn install
+   ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+3. **Set up environment variables**
+   Create a `.env.local` file in the root directory and add:
+   ```env
+   NEXT_PUBLIC_APP_NAME=BudgetBuddy
+   # Add other environment variables as needed
+   ```
+
+4. **Run the development server**
+   ```bash
+   npm run dev
+   # or
+   yarn dev
+   ```
+
+5. **Open in your browser**
+   The application will be available at [http://localhost:3000](http://localhost:3000)
+
+## 🛠️ Built With
+
+- [Next.js](https://nextjs.org/) - The React Framework for Production
+- [TypeScript](https://www.typescriptlang.org/) - Type-Safe JavaScript
+- [Tailwind CSS](https://tailwindcss.com/) - A utility-first CSS framework
+- [shadcn/ui](https://ui.shadcn.com/) - Beautifully designed components
+- [Lucide Icons](https://lucide.dev/) - Beautiful & consistent icon toolkit
+
+## 📝 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- [Next.js Documentation](https://nextjs.org/docs)
+- [Tailwind CSS Documentation](https://tailwindcss.com/docs)
+- [shadcn/ui Documentation](https://ui.shadcn.com/docs)
+- [Lucide Icons](https://lucide.dev/)
