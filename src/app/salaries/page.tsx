@@ -12,7 +12,7 @@ import { Progress } from '@/components/ui/progress';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { DollarSign, Plus, Trash2, PieChart, Edit } from 'lucide-react';
+import { DollarSign, Plus, Trash2, PieChart, Edit, ChevronDown } from 'lucide-react';
 import { toast } from 'sonner';
 import { AllocationForm } from '@/components/salary/AllocationForm';
 
@@ -32,6 +32,7 @@ export default function SalariesPage() {
   const [selectedSalaryId, setSelectedSalaryId] = useState<string | null>(null);
   const [allocations, setAllocations] = useState<SalaryAllocation[]>([]);
   const [showSalaryForm, setShowSalaryForm] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const router = useRouter();
 
   const [salaryForm, setSalaryForm] = useState<{
@@ -45,7 +46,6 @@ export default function SalariesPage() {
   });
   
   const selectedSalary = selectedSalaryId ? salaries.find(s => s.id === selectedSalaryId) : null;
-
 
   useEffect(() => {
     const currentUser = AuthService.getCurrentUser();
@@ -210,269 +210,335 @@ export default function SalariesPage() {
   const handleSelectSalary = (salaryId: string) => {
     setSelectedSalaryId(salaryId);
     loadAllocations(salaryId);
+    setMobileMenuOpen(false);
   };
-  return (
-    <div className="container mx-auto px-4 py-8 max-w-3xl">
-      <div className="flex flex-col gap-6">
-        {/* Salary Selector */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-2">
-          {salaries.map(s => (
-            <Button
-              key={s.id}
-              variant={selectedSalaryId === s.id ? 'default' : 'outline'}
-              onClick={() => handleSelectSalary(s.id)}
-              className="shrink-0"
-            >
-              {formatAmount(s.baseSalary, s.currency)}
-            </Button>
-          ))}
-          <Button 
-            variant="outline" 
-            size="icon" 
-            onClick={handleAddNewSalary}
-            title="Add new salary"
-          >
-            <Plus className="h-4 w-4" />
-          </Button>
-        </div>
 
-        {/* Salary Card */}
-        <Card className="border-0 shadow-sm">
-          <CardHeader className="pb-2">
-            <div className="flex justify-between items-center">
-              <CardTitle className="text-xl flex items-center gap-2">
-                <DollarSign className="h-5 w-5 text-blue-600" />
-                {selectedSalary ? 'Salary Overview' : 'Set Up Your Salary'}
-              </CardTitle>
-              {selectedSalary && (
-                <div className="flex gap-2">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => handleDeleteSalary()}
-                    className="text-red-600 hover:bg-red-50"
-                    title="Delete salary"
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <div className="container mx-auto px-3 py-6 max-w-4xl">
+        <div className="flex flex-col gap-6">
+          {/* Header */}
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div>
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Salary Management</h1>
+              <p className="text-gray-600 mt-1">Manage your salary allocations and budget</p>
+            </div>
+            {salaries.length > 0 && (
+              <Button 
+                onClick={handleAddNewSalary}
+                className="bg-blue-600 hover:bg-blue-700 px-6 h-10 w-full sm:w-auto"
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                Add Salary
+              </Button>
+            )}
+          </div>
+
+          {/* Mobile Salary Selector */}
+          {salaries.length > 0 && (
+            <div className="sm:hidden">
+              <Button
+                variant="outline"
+                className="w-full justify-between"
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              >
+                <span>
+                  {selectedSalary ? formatAmount(selectedSalary.baseSalary, selectedSalary.currency) : 'Select Salary'}
+                </span>
+                <ChevronDown className={`h-4 w-4 transition-transform ${mobileMenuOpen ? 'rotate-180' : ''}`} />
+              </Button>
+              
+              {mobileMenuOpen && (
+                <div className="mt-2 border rounded-lg bg-white shadow-lg">
+                  {salaries.map(salary => (
+                    <button
+                      key={salary.id}
+                      className={`w-full px-4 py-3 text-left border-b last:border-b-0 ${
+                        selectedSalaryId === salary.id ? 'bg-blue-50 text-blue-700' : 'hover:bg-gray-50'
+                      }`}
+                      onClick={() => handleSelectSalary(salary.id)}
+                    >
+                      <div className="font-medium">{formatAmount(salary.baseSalary, salary.currency)}</div>
+                      <div className="text-sm text-gray-500">{salary.currency}</div>
+                    </button>
+                  ))}
+                  <button
+                    className="w-full px-4 py-3 text-left text-blue-600 hover:bg-blue-50 flex items-center"
+                    onClick={handleAddNewSalary}
                   >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => {
-                      if (selectedSalary) {
-                        setSalaryForm({
-                          baseSalary: selectedSalary.baseSalary.toString(),
-                          currency: selectedSalary.currency,
-                          id: selectedSalary.id
-                        });
-                        setShowSalaryForm(true);
-                      }
-                    }}
-                    title="Edit salary"
-                  >
-                    <Edit className="h-4 w-4" />
-                  </Button>
+                    <Plus className="h-4 w-4 mr-2" />
+                    Add New Salary
+                  </button>
                 </div>
               )}
             </div>
-            {selectedSalary && (
-              <CardDescription className="text-sm text-gray-500">
-                Manage your monthly salary and allocations
-              </CardDescription>
-            )}
-          </CardHeader>
-          <CardContent className="pt-0">
-            {selectedSalary ? (
-              <div className="space-y-6">
-                <div className="bg-blue-50 p-4 rounded-lg">
-                  <div className="flex items-end justify-between">
-                    <div>
-                      <p className="text-2xl font-semibold text-gray-900">
-                        {formatAmount(selectedSalary.baseSalary, selectedSalary.currency)}
-                      </p>
-                      <p className="text-sm text-gray-600">
-                        Monthly salary • {selectedSalary.currency}
-                      </p>
-                    </div>
-                    {/* Removed New Allocation button as it was causing confusion with salary entry */}
-                  </div>
-                </div>
+          )}
 
-                {/* Allocation Progress */}
-                <div className="space-y-4">
-                  <div className="flex justify-between items-center">
-                    <h3 className="text-sm font-medium">Allocation Progress</h3>
-                    <div className="text-sm text-gray-600">
-                      {100 - remainingPercentage}% allocated
-                    </div>
-                  </div>
-                  <Progress value={100 - remainingPercentage} className="h-2" />
-                </div>
-
-                {/* Allocation Form */}
-                {allocations.length === 0 ? (
-                  <div className="text-center py-8 border-2 border-dashed rounded-lg">
-                    <PieChart className="h-10 w-10 mx-auto text-gray-400 mb-2" />
-                    <h3 className="font-medium text-gray-700">No allocations yet</h3>
-                    <p className="text-sm text-gray-500 mb-4">Add your first allocation to get started</p>
-                    <AllocationForm 
-                      salary={selectedSalary} 
-                      allocations={allocations} 
-                      onAddAllocation={handleAddAllocation}
-                      compact={false}
-                    />
-                  </div>
-                ) : (
-                  <div className="space-y-4">
-                    <AllocationForm 
-                      salary={selectedSalary} 
-                      allocations={allocations} 
-                      onAddAllocation={handleAddAllocation}
-                      compact={true}
-                    />
-                  </div>
-                )}
-              </div>
-            ) : (
-              <div className="text-center py-12">
-                <div className="bg-blue-50 p-6 rounded-full inline-flex mb-4">
-                  <DollarSign className="h-8 w-8 text-blue-600" />
-                </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">No salary set</h3>
-                <p className="text-gray-500 mb-6 max-w-md mx-auto">Set up your monthly salary to start planning your budget and allocations</p>
-                <Button 
-                  onClick={handleAddNewSalary}
-                  className="bg-blue-600 hover:bg-blue-700 px-6 h-10"
+          {/* Desktop Salary Selector */}
+          {salaries.length > 0 && (
+            <div className="hidden sm:flex items-center gap-2 overflow-x-auto pb-2">
+              {salaries.map(s => (
+                <Button
+                  key={s.id}
+                  variant={selectedSalaryId === s.id ? 'default' : 'outline'}
+                  onClick={() => handleSelectSalary(s.id)}
+                  className="shrink-0"
                 >
-                  <Plus className="h-4 w-4 mr-2" />
-                  Set Up Salary
+                  {formatAmount(s.baseSalary, s.currency)}
                 </Button>
-              </div>
-            )}
-          </CardContent>
-        </Card>
+              ))}
+              <Button 
+                variant="outline" 
+                size="icon" 
+                onClick={handleAddNewSalary}
+                title="Add new salary"
+                className="shrink-0"
+              >
+                <Plus className="h-4 w-4" />
+              </Button>
+            </div>
+          )}
 
-        {/* Allocations Summary */}
-        {selectedSalary && allocations.length > 0 && (
-          <Card className="border-0 shadow-sm">
-            <CardHeader className="pb-2">
-              <div className="flex justify-between items-center">
-                <CardTitle className="text-lg flex items-center gap-2">
-                  <PieChart className="h-5 w-5 text-blue-600" />
-                  Allocations
-                </CardTitle>
-                <div className="text-sm text-gray-500">
-                  {allocations.length} {allocations.length === 1 ? 'category' : 'categories'}
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent className="pt-0">
-              <div className="space-y-2">
-                {allocations.map((allocated) => (
-                  <div 
-                    key={allocated.id} 
-                    className="flex items-center justify-between p-3 bg-white border rounded-lg hover:bg-gray-50 transition-colors"
+          {/* Main Content */}
+          {salaries.length === 0 ? (
+            // Empty State
+            <Card className="border-0 shadow-sm">
+              <CardContent className="pt-6">
+                <div className="text-center py-12">
+                  <div className="bg-blue-50 p-6 rounded-full inline-flex mb-4">
+                    <DollarSign className="h-8 w-8 text-blue-600" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">No salary set</h3>
+                  <p className="text-gray-500 mb-6 max-w-md mx-auto">Set up your monthly salary to start planning your budget and allocations</p>
+                  <Button 
+                    onClick={handleAddNewSalary}
+                    className="bg-blue-600 hover:bg-blue-700 px-6 h-10"
                   >
-                    <div className="flex-1 min-w-0">
-                      <p className="font-medium text-gray-900 truncate">{allocated.category}</p>
-                      <div className="flex items-center gap-3 mt-1">
-                        <span className="text-sm font-medium text-blue-600">
-                          {allocated.percentage}%
-                        </span>
-                        <span className="text-sm text-gray-500">
-                          {formatAmount(allocated.allocatedAmount, selectedSalary.currency)}
-                        </span>
+                    <Plus className="h-4 w-4 mr-2" />
+                    Set Up Salary
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          ) : selectedSalary ? (
+            <>
+              {/* Salary Overview Card */}
+              <Card className="border-0 shadow-sm">
+                <CardHeader className="pb-4">
+                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <div>
+                      <CardTitle className="text-xl flex items-center gap-2">
+                        <DollarSign className="h-5 w-5 text-blue-600" />
+                        Salary Overview
+                      </CardTitle>
+                      <CardDescription className="text-sm text-gray-500 mt-1">
+                        Manage your monthly salary and allocations
+                      </CardDescription>
+                    </div>
+                    <div className="flex gap-2">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleDeleteSalary()}
+                        className="text-red-600 hover:bg-red-50"
+                        title="Delete salary"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleEditSalary(selectedSalary)}
+                        title="Edit salary"
+                      >
+                        <Edit className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent className="pt-0">
+                  <div className="space-y-6">
+                    {/* Salary Amount */}
+                    <div className="bg-blue-50 p-4 rounded-lg">
+                      <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-2">
+                        <div>
+                          <p className="text-2xl font-bold text-gray-900">
+                            {formatAmount(selectedSalary.baseSalary, selectedSalary.currency)}
+                          </p>
+                          <p className="text-sm text-gray-600">
+                            Monthly salary • {selectedSalary.currency}
+                          </p>
+                        </div>
                       </div>
                     </div>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => handleDeleteAllocation(allocated.id)}
-                      className="text-gray-400 hover:text-red-600 hover:bg-transparent"
-                      title="Remove allocation"
+
+                    {/* Allocation Progress */}
+                    <div className="space-y-4">
+                      <div className="flex justify-between items-center">
+                        <h3 className="text-sm font-medium text-gray-900">Allocation Progress</h3>
+                        <div className="text-sm font-medium text-gray-700">
+                          {(100 - remainingPercentage).toFixed(1)}% allocated
+                        </div>
+                      </div>
+                      <Progress value={100 - remainingPercentage} className="h-3" />
+                    </div>
+
+                    {/* Allocation Form */}
+                    {allocations.length === 0 ? (
+                      <div className="text-center py-8 border-2 border-dashed border-gray-300 rounded-lg bg-gray-50">
+                        <PieChart className="h-12 w-12 mx-auto text-gray-400 mb-3" />
+                        <h3 className="font-semibold text-gray-700 mb-1">No allocations yet</h3>
+                        <p className="text-sm text-gray-500 mb-4">Add your first allocation to get started</p>
+                        <AllocationForm 
+                          salary={selectedSalary} 
+                          allocations={allocations} 
+                          onAddAllocation={handleAddAllocation}
+                          compact={false}
+                        />
+                      </div>
+                    ) : (
+                      <AllocationForm 
+                        salary={selectedSalary} 
+                        allocations={allocations} 
+                        onAddAllocation={handleAddAllocation}
+                        compact={true}
+                      />
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Allocations Summary */}
+              {allocations.length > 0 && (
+                <Card className="border-0 shadow-sm">
+                  <CardHeader className="pb-4">
+                    <div className="flex justify-between items-center">
+                      <CardTitle className="text-lg flex items-center gap-2">
+                        <PieChart className="h-5 w-5 text-blue-600" />
+                        Allocations
+                      </CardTitle>
+                      <div className="text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded">
+                        {allocations.length} {allocations.length === 1 ? 'category' : 'categories'}
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="pt-0">
+                    <div className="space-y-3">
+                      {allocations.map((allocated) => (
+                        <div 
+                          key={allocated.id} 
+                          className="flex items-center justify-between p-4 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                        >
+                          <div className="flex-1 min-w-0">
+                            <p className="font-semibold text-gray-900 truncate">{allocated.category}</p>
+                            <div className="flex items-center gap-4 mt-1">
+                              <span className="text-sm font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded">
+                                {allocated.percentage}%
+                              </span>
+                              <span className="text-sm text-gray-600">
+                                {formatAmount(allocated.allocatedAmount, selectedSalary.currency)}
+                              </span>
+                            </div>
+                          </div>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleDeleteAllocation(allocated.id)}
+                            className="text-gray-400 hover:text-red-600 hover:bg-red-50 shrink-0 ml-2"
+                            title="Remove allocation"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      ))}
+
+                      {remainingPercentage > 0 && (
+                        <div className="p-4 border-2 border-dashed border-gray-300 rounded-lg text-center bg-gray-50">
+                          <p className="text-sm font-medium text-gray-700">
+                            {remainingPercentage.toFixed(1)}% unallocated
+                          </p>
+                          <p className="text-sm text-gray-500">
+                            {formatAmount(remainingAmount, selectedSalary.currency)} available
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+            </>
+          ) : null}
+        </div>
+
+        {/* Salary Form Modal */}
+        {showSalaryForm && (
+          <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+            <Card className="w-full max-w-md mx-auto">
+              <CardHeader>
+                <CardTitle className="text-xl">{salaryForm.id ? 'Edit Salary' : 'Set Monthly Salary'}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={handleSalarySubmit} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="baseSalary" className="text-sm font-medium text-gray-700">
+                      Monthly Salary
+                    </Label>
+                    <Input
+                      id="baseSalary"
+                      type="number"
+                      step="0.01"
+                      value={salaryForm.baseSalary}
+                      onChange={(e) => setSalaryForm(prev => ({ ...prev, baseSalary: e.target.value }))}
+                      placeholder="Enter your monthly salary"
+                      required
+                      className="text-lg"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="currency" className="text-sm font-medium text-gray-700">
+                      Currency
+                    </Label>
+                    <Select 
+                      value={salaryForm.currency} 
+                      onValueChange={(value: 'USD' | 'LBP') => setSalaryForm(prev => ({ ...prev, currency: value }))}
                     >
-                      <Trash2 className="h-4 w-4" />
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select currency" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="USD">USD</SelectItem>
+                        <SelectItem value="LBP">LBP</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  
+                  <div className="flex gap-2 pt-2">
+                    <Button type="submit" className="bg-blue-600 hover:bg-blue-700 flex-1 py-2.5">
+                      {salaryForm.id ? 'Update Salary' : 'Set Salary'}
+                    </Button>
+                    <Button 
+                      type="button"
+                      variant="outline"
+                      onClick={() => {
+                        setShowSalaryForm(false);
+                        setSalaryForm({ 
+                          baseSalary: selectedSalary ? selectedSalary.baseSalary.toString() : '', 
+                          currency: selectedSalary ? selectedSalary.currency : 'USD', 
+                          id: selectedSalary ? selectedSalary.id : '' 
+                        });
+                      }}
+                      className="py-2.5"
+                    >
+                      Cancel
                     </Button>
                   </div>
-                ))}
-
-                {remainingPercentage > 0 && (
-                  <div className="p-3 border-2 border-dashed border-gray-200 rounded-lg text-center bg-gray-50">
-                    <p className="text-sm font-medium text-gray-700">
-                      {remainingPercentage.toFixed(2)}% unallocated
-                    </p>
-                    <p className="text-sm text-gray-500">
-                      {formatAmount(remainingAmount, selectedSalary.currency)} available
-                    </p>
-                  </div>
-                )}
-              </div>
-            </CardContent>
-          </Card>
+                </form>
+              </CardContent>
+            </Card>
+          </div>
         )}
       </div>
-
-      {/* Salary Form Modal */}
-      {showSalaryForm && (
-        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <Card className="w-full max-w-md">
-            <CardHeader>
-              <CardTitle>{salaryForm.id ? 'Edit Salary' : 'Set Monthly Salary'}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handleSalarySubmit} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="baseSalary">Monthly Salary</Label>
-                  <Input
-                    id="baseSalary"
-                    type="number"
-                    step="0.01"
-                    value={salaryForm.baseSalary}
-                    onChange={(e) => setSalaryForm(prev => ({ ...prev, baseSalary: e.target.value }))}
-                    placeholder="Enter your monthly salary"
-                    required
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="currency">Currency</Label>
-                  <Select 
-                    value={salaryForm.currency} 
-                    onValueChange={(value: 'USD' | 'LBP') => setSalaryForm(prev => ({ ...prev, currency: value }))}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select currency" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="USD">USD</SelectItem>
-                      <SelectItem value="LBP">LBP</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="flex gap-2 pt-2">
-                  <Button type="submit" className="bg-blue-600 hover:bg-blue-700 flex-1">
-                    {salaryForm.id ? 'Update Salary' : 'Set Salary'}
-                  </Button>
-                  <Button 
-                    type="button"
-                    variant="outline"
-                    onClick={() => {
-                      setShowSalaryForm(false);
-                      setSalaryForm({ 
-                        baseSalary: selectedSalary ? selectedSalary.baseSalary.toString() : '', 
-                        currency: selectedSalary ? selectedSalary.currency : 'USD', 
-                        id: selectedSalary ? selectedSalary.id : '' 
-                      });
-                    }}
-                  >
-                    Cancel
-                  </Button>
-                </div>
-              </form>
-            </CardContent>
-          </Card>
-        </div>
-      )}
     </div>
   );
 }

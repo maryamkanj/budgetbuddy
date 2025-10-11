@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Plus, X } from 'lucide-react';
 import { toast } from 'sonner';
 import { Salary, SalaryAllocation } from '@/types/salary';
-// Import any necessary services or utilities here
+import { CategoryService } from '@/lib/categoryService';
 
 interface AllocationFormProps {
   salary: Salary;
@@ -35,14 +35,20 @@ export function AllocationForm({
     percentage: '',
   });
   
-  // Define categories state
-  const [categories, setCategories] = useState<string[]>([
-    'Housing', 'Transportation', 'Food', 'Utilities', 'Insurance', 
-    'Healthcare', 'Savings', 'Entertainment', 'Other'
-  ]);
+  // Use CategoryService to get categories
+  const [categories, setCategories] = useState<string[]>([]);
   
+  useEffect(() => {
+    if (salary?.userId) {
+      // Get combined categories (default + custom) for allocation type
+      const combinedCategories = CategoryService.getCombinedCategories(salary.userId, 'allocation');
+      setCategories(combinedCategories);
+    }
+  }, [salary?.userId]);
+
   const remainingPercentage = 100 - (allocations.reduce((sum, alloc) => sum + alloc.percentage, 0) || 0) + (currentPercentage || 0);
   const currentAllocationPercentage = allocations.reduce((sum, alloc) => sum + alloc.percentage, 0);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -62,13 +68,36 @@ export function AllocationForm({
       toast.error(`Maximum allocation amount is ${formatCurrency(maxAmount, salary.currency)}`);
       return;
     }
+
+    // Determine the final category name
+    let finalCategory = showCustomCategory ? customCategory : allocationForm.category;
+    
+    // If it's a custom category, save it to the CategoryService
+    if (showCustomCategory && customCategory.trim() && salary?.userId) {
+      try {
+        const newCategory = CategoryService.addCustomCategory(customCategory.trim(), salary.userId, 'allocation');
+        finalCategory = newCategory.name;
+        
+        // Update the categories list
+        const updatedCategories = CategoryService.getCombinedCategories(salary.userId, 'allocation');
+        setCategories(updatedCategories);
+      } catch (error) {
+        console.error('Error saving custom category:', error);
+        toast.error('Failed to save custom category');
+        return;
+      }
+    }
+    
+    if (!finalCategory.trim()) {
+      toast.error('Please select or enter a category');
+      return;
+    }
     
     try {
       // Create the allocation object with only the required properties
       const allocationData = {
-        category: showCustomCategory ? customCategory : allocationForm.category,
+        category: finalCategory,
         percentage,
-        // Removed createdAt, salaryId, and id as they're not in the expected type
       };
       
       onAddAllocation(allocationData);
@@ -86,11 +115,15 @@ export function AllocationForm({
   };
 
   return (
-    <div className={`space-y-4 ${compact ? 'p-0' : 'p-4 border rounded-lg'}`}>
-      <h3 className="font-medium">Add Allocation</h3>
-      <div className="space-y-4">
-        <div>
-          <Label htmlFor="category">Category</Label>
+    <div className={`space-y-4 ${compact ? 'p-0' : 'p-4 md:p-6 border rounded-lg bg-white'}`}>
+      <h3 className="font-semibold text-lg text-gray-900">Add Allocation</h3>
+      
+      <form onSubmit={handleSubmit} className="space-y-4">
+        {/* Category Selection */}
+        <div className="space-y-2">
+          <Label htmlFor="category" className="text-sm font-medium text-gray-700">
+            Category
+          </Label>
           {showCustomCategory ? (
             <div className="flex gap-2">
               <Input
@@ -98,12 +131,14 @@ export function AllocationForm({
                 placeholder="Enter category name"
                 value={customCategory}
                 onChange={(e) => setCustomCategory(e.target.value)}
+                className="flex-1"
               />
               <Button
                 type="button"
                 variant="outline"
                 size="icon"
                 onClick={() => setShowCustomCategory(false)}
+                className="shrink-0"
               >
                 <X className="h-4 w-4" />
               </Button>
@@ -127,12 +162,12 @@ export function AllocationForm({
                     {category}
                   </SelectItem>
                 ))}
-                <div className="px-2 py-1.5">
+                <div className="border-t pt-1">
                   <Button
                     type="button"
                     variant="ghost"
                     size="sm"
-                    className="w-full justify-start"
+                    className="w-full justify-start text-blue-600 hover:text-blue-700 hover:bg-blue-50"
                     onClick={(e) => {
                       e.stopPropagation();
                       setShowCustomCategory(true);
@@ -146,56 +181,72 @@ export function AllocationForm({
             </Select>
           )}
         </div>
-      </div>
 
-      <div className="space-y-4">
-        <div className="flex justify-between items-center">
-          <Label htmlFor="percentage">Percentage</Label>
-          <span className="text-sm text-muted-foreground">
-            {remainingPercentage}% remaining
-          </span>
-        </div>
-        <div className="flex gap-2">
-          <Input
-            type="number"
-            min="0.01"
-            max={remainingPercentage}
-            step="0.01"
-            placeholder="%"
-            value={allocationForm.percentage}
-            onChange={(e) => {
-              const value = e.target.value;
-              if (value === '' || /^\d*\.?\d*$/.test(value)) {
-                setAllocationForm(prev => ({
-                  ...prev,
-                  percentage: value
-                }));
-              }
-            }}
-            className="pr-8"
-          />
-          <span className="flex items-center">%</span>
-          <div className="flex-1 flex items-center">
-            <div className="w-full bg-gray-200 rounded-full h-2">
-              <div
-                className="bg-blue-600 h-2 rounded-full transition-all duration-300"
-                style={{
-                  width: `${currentAllocationPercentage}%`,
-                  maxWidth: '100%'
-                }}
-              />
+        {/* Percentage Input */}
+        <div className="space-y-3">
+          <div className="flex justify-between items-center">
+            <Label htmlFor="percentage" className="text-sm font-medium text-gray-700">
+              Percentage
+            </Label>
+            <span className="text-sm text-blue-600 font-medium">
+              {remainingPercentage.toFixed(1)}% remaining
+            </span>
+          </div>
+          
+          <div className="space-y-3">
+            <div className="flex items-center gap-2">
+              <div className="relative flex-1">
+                <Input
+                  type="number"
+                  min="0.01"
+                  max={remainingPercentage}
+                  step="0.01"
+                  placeholder="0.00"
+                  value={allocationForm.percentage}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    if (value === '' || /^\d*\.?\d*$/.test(value)) {
+                      setAllocationForm(prev => ({
+                        ...prev,
+                        percentage: value
+                      }));
+                    }
+                  }}
+                  className="pr-12 text-lg"
+                />
+                <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 font-medium">
+                  %
+                </span>
+              </div>
+            </div>
+            
+            {/* Progress Bar */}
+            <div className="space-y-1">
+              <div className="flex justify-between text-xs text-gray-500">
+                <span>Allocated: {currentAllocationPercentage.toFixed(1)}%</span>
+                <span>Remaining: {remainingPercentage.toFixed(1)}%</span>
+              </div>
+              <div className="w-full bg-gray-200 rounded-full h-2.5">
+                <div
+                  className="bg-blue-600 h-2.5 rounded-full transition-all duration-300"
+                  style={{
+                    width: `${currentAllocationPercentage}%`,
+                    maxWidth: '100%'
+                  }}
+                />
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <Button
-        onClick={handleSubmit}
-        className="w-full mt-2"
-        disabled={!allocationForm.category || !allocationForm.percentage}
-      >
-        Add Allocation
-      </Button>
+        <Button
+          type="submit"
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5"
+          disabled={!allocationForm.category && !customCategory || !allocationForm.percentage}
+        >
+          Add Allocation
+        </Button>
+      </form>
     </div>
   );
 }
