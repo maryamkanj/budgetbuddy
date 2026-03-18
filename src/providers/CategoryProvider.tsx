@@ -6,7 +6,7 @@ import {
     getCustomCategories,
     addCustomCategory as apiAddCustomCategory,
     deleteCustomCategory as apiDeleteCustomCategory
-} from '@/lib/actions/categoryService'
+} from '@/lib/actions/categories'
 import { CustomCategory } from '@/lib/actions/categoryConstants'
 
 interface CategoryContextType {

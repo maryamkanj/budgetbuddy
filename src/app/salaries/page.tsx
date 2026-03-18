@@ -1,11 +1,21 @@
 import { PageContainer } from '@/components/layout/PageContainer';
 import { PageHeader } from '@/components/layout/PageHeader';
-import { SalariesClient, AddSalaryButton } from '@/features/salary/components/SalariesClient';
-import { MainSalariesList } from '@/features/salary/components/MainSalariesList';
-import { refreshSalariesAction } from '@/features/salary/actions/salaryActions';
+import { SalariesClient, AddSalaryButton } from '@/components/features/salaries/SalariesClient';
+import { MainSalariesList } from '@/components/features/salaries/MainSalariesList';
+import { refreshSalariesAction } from '@/lib/actions/salaries';
+
+// Opt out of static generation to allow dynamic data fetching
+export const dynamic = 'force-dynamic'
 
 export default async function SalariesPage() {
-  const result = await refreshSalariesAction();
+  let result;
+  try {
+    result = await refreshSalariesAction();
+  } catch (error) {
+    console.error('Failed to refresh salaries on page load:', error);
+    result = { success: false, error: 'Failed to load salaries data' };
+  }
+  
   // Safe extraction of data
   const initialData = result.success ? result.data : null;
   const initialSalaries = initialData?.salaries || [];

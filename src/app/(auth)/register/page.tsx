@@ -3,8 +3,8 @@
 import { useState, useEffect } from 'react';
 import { useLoadingThreshold } from '@/hooks/useLoadingThreshold';
 import { useSupabaseAuth } from '@/providers/SupabaseAuthProvider';
-import { AuthForm } from '@/features/auth/components/authForm';
-import { LoadingPage } from '@/components/ui/loadingSpinner';
+import { AuthForm } from '@/components/features/auth/authForm';
+import { LoadingPage } from '@/components/common/LoadingSpinner';
 
 export default function RegisterPage() {
   const { user, loading } = useSupabaseAuth();

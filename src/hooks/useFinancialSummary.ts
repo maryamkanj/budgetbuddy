@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { calculateFinancialSummary } from '@/lib/utils/financial';
-import { Database } from '@/types/supabase';
+import { Database } from '@/types/database';
 
 type Transaction = Database['public']['Tables']['transactions']['Row'];
 type Salary = Database['public']['Tables']['salaries']['Row'];

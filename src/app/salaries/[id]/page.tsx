@@ -1,5 +1,5 @@
-import { getSalaryByIdAction } from '@/features/salary/actions/salaryActions';
-import { SalaryDetailsClient } from '@/features/salary/components/SalaryDetailsClient';
+import { getSalaryByIdAction } from '@/lib/actions/salaries';
+import { SalaryDetailsClient } from '@/components/features/salaries/SalaryDetailsClient';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Trash2 } from 'lucide-react';
 import Link from 'next/link';

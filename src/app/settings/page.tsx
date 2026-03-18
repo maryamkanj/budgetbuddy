@@ -27,18 +27,18 @@ import {
   ArrowRight,
   Star
 } from 'lucide-react';
-import { TierBadge } from '@/features/saas/components/BadgeTier';
+import { TierBadge } from '@/components/features/saas/BadgeTier';
 import { toast } from 'sonner';
 import { useTransactions } from '@/providers/TransactionProvider';
 import { useSalaries } from '@/providers/SalaryProvider';
 import { useGoals } from '@/providers/GoalProvider';
 import { useSubscription, useUsageLimits } from '@/providers/SubscriptionProvider';
-import { TransactionUsageMeter, GoalUsageMeter, SalaryUsageMeter } from '@/features/saas/components/UsageMeter';
-import { Database } from '@/types/supabase';
-import { DeleteConfirmModal } from '@/components/ui/deleteConfirmModal';
+import { TransactionUsageMeter, GoalUsageMeter, SalaryUsageMeter } from '@/components/features/saas/UsageMeter';
+import { Database } from '@/types/database';
+import { DeleteConfirmModal } from '@/components/common/DeleteConfirmModal';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { PageContainer } from '@/components/layout/PageContainer';
-import { LoadingPage } from '@/components/ui/loadingSpinner';
+import { LoadingPage } from '@/components/common/LoadingSpinner';
 
 type UserProfile = Database['public']['Tables']['users']['Row'];
 type Transaction = Database['public']['Tables']['transactions']['Row'];

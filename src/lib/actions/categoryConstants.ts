@@ -1,4 +1,4 @@
-import { Database } from '@/types/supabase';
+import { Database } from '@/types/database';
 
 export type CustomCategory = Database['public']['Tables']['custom_categories']['Row'];
 

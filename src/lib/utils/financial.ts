@@ -1,4 +1,4 @@
-import { Database } from '@/types/supabase';
+import { Database } from '@/types/database';
 
 export const DEFAULT_EXCHANGE_RATE = 89699.58;
 

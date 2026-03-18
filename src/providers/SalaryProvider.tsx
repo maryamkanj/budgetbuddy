@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useState, useCallback, ReactNode, useEffect, useRef, useMemo } from 'react'
 import { useSupabaseAuth } from './SupabaseAuthProvider'
-import { Database } from '@/types/supabase'
+import { Database } from '@/types/database'
 import { 
     refreshSalariesAction, 
     createSalaryAction, 
@@ -11,7 +11,7 @@ import {
     createSalaryAllocationAction,
     updateSalaryAllocationAction,
     deleteSalaryAllocationAction
-} from '@/features/salary/actions/salaryActions'
+} from '@/lib/actions/salaries'
 
 type Salary = Database['public']['Tables']['salaries']['Row']
 type SalaryAllocation = Database['public']['Tables']['salary_allocations']['Row']

@@ -1,4 +1,4 @@
-import { createServerSupabase } from '@/lib/supabase/server'
+import { createServerSupabase } from '@/lib/db/server'
 import { SubscriptionTier } from '@/lib/config/plans'
 
 export type ActionResult<T> = 

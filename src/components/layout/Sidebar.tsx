@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname, useSearchParams, useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { TierBadge } from '@/features/saas/components/BadgeTier';
+import { TierBadge } from '@/components/features/saas/BadgeTier';
 import {
   Menu,
   X,

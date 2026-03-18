@@ -2,8 +2,8 @@
 
 import { createContext, useContext, useEffect, useState, ReactNode, useMemo, useCallback } from 'react'
 import { User } from '@supabase/supabase-js'
-import { supabaseClient } from '@/lib/supabase/client'
-import { Database } from '@/types/supabase'
+import { supabaseClient } from '@/lib/db/client'
+import { Database } from '@/types/database'
 import {
   changePasswordAction,
   updateProfileAction,
@@ -12,7 +12,7 @@ import {
   signUpAction,
   signOutAction
 } from '@/lib/actions/authActions'
-import { LoadingSpinner } from '@/components/ui/loadingSpinner'
+import { LoadingSpinner } from '@/components/common/LoadingSpinner'
 
 type AppUser = Database['public']['Tables']['users']['Row']
 

@@ -1,9 +1,9 @@
 import { PageContainer } from '@/components/layout/PageContainer';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Database } from 'lucide-react';
-import { TransactionsClient, AddTransactionButton } from '@/features/transactions/components/TransactionsClient';
-import { TransactionsList } from '@/features/transactions/components/TransactionsList';
-import { getTransactionsAction } from '@/features/transactions/actions/transactionFetchActions';
+import { TransactionsClient, AddTransactionButton } from '@/components/features/transactions/TransactionsClient';
+import { TransactionsList } from '@/components/features/transactions/TransactionsList';
+import { getTransactionsAction } from '@/lib/actions/transactionFetchActions';
 
 export default async function TransactionsPage() {
   const result = await getTransactionsAction(0, 50);

@@ -6,7 +6,7 @@
 -- Create custom types
 CREATE TYPE subscription_tier AS ENUM ('Free', 'Pro', 'Business');
 CREATE TYPE subscription_status AS ENUM ('active', 'cancelled', 'past_due');
-CREATE TYPE goal_status AS ENUM ('Active', 'Completed', 'Failed');
+CREATE TYPE goal_status AS ENUM ('Active', 'Completed', 'Failed', 'Overdue');
 CREATE TYPE transaction_type AS ENUM ('Spending', 'Saving');
 CREATE TYPE transaction_category AS ENUM ('Food', 'Transport', 'Bills', 'Entertainment', 'Other');
 CREATE TYPE currency_type AS ENUM ('USD', 'LBP');
@@ -477,4 +477,4 @@ VALUES ('exchange_rate_lbp_usd', '89699.58', 'The current exchange rate for LBP 
 
 CREATE TRIGGER update_system_config_updated_at
 BEFORE UPDATE ON system_config
-FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();

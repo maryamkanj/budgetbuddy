@@ -1,7 +1,7 @@
-import { getReportsDataAction } from '@/features/reports/actions/reportActions';
-import { ReportsClient } from '@/features/reports/components/ReportsClient';
+import { getReportsDataAction } from '@/lib/actions/reports';
+import { ReportsClient } from '@/components/features/reports/ReportsClient';
 import { Suspense } from 'react';
-import { LoadingPage } from '@/components/ui/loadingSpinner';
+import { LoadingPage } from '@/components/common/LoadingSpinner';
 
 interface PageProps {
   searchParams: Promise<{ year?: string }>;

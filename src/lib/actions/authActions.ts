@@ -1,8 +1,8 @@
 'use server'
 
-import { createServerSupabase } from '@/lib/supabase/server'
+import { createServerSupabase } from '@/lib/db/server'
 import { createClient } from '@supabase/supabase-js'
-import { Database } from '@/types/supabase'
+import { Database } from '@/types/database'
 import { ActionResult } from './actionUtils'
 import { AuthTokenResponse, AuthResponse } from '@supabase/supabase-js'
 

@@ -3,10 +3,11 @@
 import { createContext, useContext, useState, useCallback, ReactNode, useEffect, useRef, useMemo } from 'react'
 import { useSupabaseAuth } from './SupabaseAuthProvider'
 import { useSubscription } from './SubscriptionProvider'
-import { Database } from '@/types/supabase'
+import { Database } from '@/types/database'
 import {
     createGoalAction, updateGoalAction, deleteGoalAction, refreshGoalsAction
-} from '@/features/goals/actions/goalActions'
+} from '@/lib/actions/goals'
+import { updateOverdueGoalsAction } from '@/lib/actions/goalStatus'
 
 
 type Goal = Database['public']['Tables']['goals']['Row']
@@ -64,6 +65,23 @@ export function GoalProvider({
             setLoading(false)
         }
     }, [userProfile, authLoading])
+
+    // Check for overdue goals when goals are loaded
+    useEffect(() => {
+        if (goals.length > 0 && userProfile) {
+            const checkOverdueGoals = async () => {
+                try {
+                    await updateOverdueGoalsAction()
+                    // Refresh goals to get updated status
+                    await refreshGoals()
+                } catch (error) {
+                    console.error('Error checking overdue goals:', error)
+                }
+            }
+            
+            checkOverdueGoals()
+        }
+    }, [goals.length, userProfile, refreshGoals]) // Only run when goals count changes or user profile loads
 
     const createGoal = useCallback(async (goalData: Omit<Database['public']['Tables']['goals']['Insert'], 'user_id'>) => {
         if (!userProfile) throw new Error('User not authenticated')

@@ -1,7 +1,7 @@
 import { PageContainer } from '@/components/layout/PageContainer';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Crown } from 'lucide-react';
-import { SubscriptionClient } from './SubscriptionClient';
+import { SubscriptionClient } from '@/components/features/subscription/SubscriptionClient';
 
 export default function SubscriptionPage() {
   return (

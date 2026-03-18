@@ -1,7 +1,7 @@
 'use server'
 
-import { createServerSupabase } from '@/lib/supabase/server'
-import { Database } from '@/types/supabase'
+import { createServerSupabase } from '@/lib/db/server'
+import { Database } from '@/types/database'
 import { unstable_noStore as noStore } from 'next/cache'
 
 type Salary = Database['public']['Tables']['salaries']['Row']

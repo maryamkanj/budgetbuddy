@@ -3,10 +3,10 @@
 import { createContext, useContext, useState, useCallback, ReactNode, useEffect, useRef, useMemo } from 'react'
 import { useSupabaseAuth } from './SupabaseAuthProvider'
 import { useSubscription } from './SubscriptionProvider'
-import { Database } from '@/types/supabase'
+import { Database } from '@/types/database'
 import {
     createTransactionAction, updateTransactionAction, deleteTransactionAction, refreshTransactionsAction
-} from '@/features/transactions/actions/transactionActions'
+} from '@/lib/actions/transactions'
 
 
 type Transaction = Database['public']['Tables']['transactions']['Row']

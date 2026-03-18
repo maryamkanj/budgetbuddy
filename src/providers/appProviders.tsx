@@ -7,8 +7,8 @@ import { CategoryProvider } from '@/providers/CategoryProvider';
 import { SalaryProvider } from '@/providers/SalaryProvider';
 import { GoalProvider } from '@/providers/GoalProvider';
 import { TransactionProvider } from '@/providers/TransactionProvider';
-import { getUsageStatsAction } from '@/features/saas/actions/usageActions';
-import { createServerSupabase } from '@/lib/supabase/server';
+import { getUsageStatsAction } from '@/lib/actions/usage';
+import { createServerSupabase } from '@/lib/db/server';
 
 export async function AppProviders({
   children

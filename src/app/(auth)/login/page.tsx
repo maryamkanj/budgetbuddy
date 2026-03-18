@@ -4,8 +4,8 @@ import { useEffect, useState } from 'react';
 import { useLoadingThreshold } from '@/hooks/useLoadingThreshold';
 import { useRouter } from 'next/navigation';
 import { useSupabaseAuth } from '@/providers/SupabaseAuthProvider';
-import { AuthForm } from '@/features/auth/components/authForm';
-import { LoadingPage } from '@/components/ui/loadingSpinner';
+import { AuthForm } from '@/components/features/auth/authForm';
+import { LoadingPage } from '@/components/common/LoadingSpinner';
 
 export default function LoginPage() {
   const { user, loading } = useSupabaseAuth();
