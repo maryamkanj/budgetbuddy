@@ -1,9 +1,10 @@
-import { createServerClient } from '@supabase/ssr'
+import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
 export async function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl
 
+    // 1. Skip middleware for static assets and public files to ensure performance
     if (
         pathname.startsWith('/_next') ||
         pathname.startsWith('/api') ||
@@ -15,36 +16,42 @@ export async function middleware(request: NextRequest) {
         return NextResponse.next()
     }
 
+    // 2. Initialize response and supabase client with proper cookie handling
     let response = NextResponse.next({
         request: {
             headers: request.headers,
         },
     })
-    response.headers.set('x-pathname', pathname)
 
     const supabase = createServerClient(
         process.env.NEXT_PUBLIC_SUPABASE_URL!,
         process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
         {
             cookies: {
-                getAll() {
-                    return request.cookies.getAll()
+                get(name: string) {
+                    return request.cookies.get(name)?.value
                 },
-                setAll(cookiesToSet) {
-                    cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value))
+                set(name: string, value: string, options: CookieOptions) {
+                    // Update request cookies for current handler
+                    request.cookies.set({ name, value, ...options })
+                    // Create new response to sync cookies to client
                     response = NextResponse.next({
-                        request,
+                        request: { headers: request.headers },
                     })
-                    cookiesToSet.forEach(({ name, value, options }) =>
-                        response.cookies.set(name, value, options)
-                    )
+                    response.cookies.set({ name, value, ...options })
+                },
+                remove(name: string, options: CookieOptions) {
+                    request.cookies.set({ name, value: '', ...options })
+                    response = NextResponse.next({
+                        request: { headers: request.headers },
+                    })
+                    response.cookies.set({ name, value: '', ...options })
                 },
             },
         }
     )
 
-    const hasSessionCookie = request.cookies.getAll().some(c => c.name.startsWith('sb-'))
-
+    // 3. Define route protection configuration
     const protectedRoutes = ['/', '/dashboard', '/transactions', '/goals', '/salaries', '/reports', '/settings', '/subscription']
     const authRoutes = ['/login', '/register']
 
@@ -56,27 +63,27 @@ export async function middleware(request: NextRequest) {
         pathname.startsWith(route)
     )
 
-    if (isProtectedRoute || isAuthRoute || hasSessionCookie) {
-        try {
-            const {
-                data: { user },
-            } = await supabase.auth.getUser()
+    // 4. Validate authentication state
+    const {
+        data: { user },
+    } = await supabase.auth.getUser()
 
-            if (!user && isProtectedRoute && !isAuthRoute) {
-                const loginUrl = new URL('/login', request.url)
-                if (pathname !== '/') {
-                    loginUrl.searchParams.set('redirectTo', pathname)
-                }
-                return NextResponse.redirect(loginUrl)
-            }
-
-            if (user && isAuthRoute) {
-                return NextResponse.redirect(new URL('/', request.url))
-            }
-        } catch (e) {
-            console.error('Middleware Auth Critical Error:', e)
+    // Redirect to login if accessing a protected route without being authenticated
+    if (!user && isProtectedRoute && !isAuthRoute) {
+        const loginUrl = new URL('/login', request.url)
+        if (pathname !== '/') {
+            loginUrl.searchParams.set('redirectTo', pathname)
         }
+        return NextResponse.redirect(loginUrl)
     }
+
+    // Redirect to dashboard if an authenticated user attempts to access login/register
+    if (user && isAuthRoute) {
+        return NextResponse.redirect(new URL('/dashboard', request.url))
+    }
+
+    // Pass the pathname in headers for server components visibility
+    response.headers.set('x-pathname', pathname)
 
     return response
 }
@@ -86,4 +93,3 @@ export const config = {
         '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
     ],
 }
-
