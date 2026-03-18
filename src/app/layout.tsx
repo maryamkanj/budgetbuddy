@@ -1,26 +1,31 @@
-'use client';
-
-import { Inter } from 'next/font/google';
+import {
+  Inter,
+  JetBrains_Mono
+} from 'next/font/google';
 import './globals.css';
-import Header from '@/components/common/header';
-import { Toaster } from '@/components/ui/sonner';
-import { AuthProvider } from '@/contexts/AuthContext';
+import { AppProviders } from '@/providers/appProviders';
 
-const inter = Inter({ subsets: ['latin'] });
+const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
+const jetbrainsMono = JetBrains_Mono({ subsets: ['latin'], variable: '--font-mono' });
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
-        <AuthProvider>
-          <Header />
-          <main>{children}</main>
-          <Toaster position="top-right" />
-        </AuthProvider>
+    <html lang="en" className="h-full dark">
+      <head>
+        <title>BudgetBuddy</title>
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+        <link rel="manifest" href="/site.webmanifest" />
+      </head>
+      <body className={`${inter.variable} ${jetbrainsMono.variable} font-sans h-full overflow-hidden antialiased bg-background text-foreground`}>
+        <AppProviders>
+          {children}
+        </AppProviders>
       </body>
     </html>
   );

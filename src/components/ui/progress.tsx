@@ -28,9 +28,9 @@ function Progress({
         data-slot="progress-indicator"
         className={cn(
           "bg-primary h-full w-full flex-1 transition-all",
-          indicatorClassName
+          indicatorClassName,
+          `translate-x-[-${100 - (value || 0)}%]`
         )}
-        style={{ transform: `translateX(-${100 - (value || 0)}%)` }}
       />
     </ProgressPrimitive.Root>
   )
