@@ -54,9 +54,11 @@ export async function middleware(request: NextRequest) {
     // 3. Define route protection configuration
     const protectedRoutes = ['/dashboard', '/transactions', '/goals', '/salaries', '/reports', '/settings', '/subscription']
     const authRoutes = ['/login', '/register']
+    const publicRoutes = ['/privacy-policy']
 
-    const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route))
+    const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route)) || pathname === '/'
     const isAuthRoute = authRoutes.some(route => pathname.startsWith(route))
+    const isPublicRoute = publicRoutes.some(route => pathname.startsWith(route))
 
     // 4. Validate authentication state
     const {
@@ -64,7 +66,7 @@ export async function middleware(request: NextRequest) {
     } = await supabase.auth.getUser()
 
     // Redirect to login if accessing a protected route without being authenticated
-    if (!user && isProtectedRoute && !isAuthRoute) {
+    if (!user && isProtectedRoute && !isAuthRoute && !isPublicRoute) {
         const loginUrl = new URL('/login', request.url)
         if (pathname !== '/') {
             loginUrl.searchParams.set('redirectTo', pathname)
