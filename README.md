@@ -2,6 +2,8 @@
 
 **Live Demo: [budgetbuddy-zeta.vercel.app](https://budgetbuddy-zeta.vercel.app)**
 
+![BudgetBuddy Dashboard](public/dashboard-screenshot.png)
+
 BudgetBuddy is a premium, feature-rich personal finance application built with a modern tech stack. It empowers users to track spending, manage multiple income sources, set financial goals, and generate detailed reports with ease. Designed for a seamless and responsive experience, it offers real-time data persistence and a sleek, animated UI.
 
 ---
@@ -15,6 +17,8 @@ BudgetBuddy is a premium, feature-rich personal finance application built with a
 - **Top Categories**: Quick view of your most frequent spending areas.
 
 ### 💸 **Comprehensive Transaction Management**
+![Transaction Management](public/transactions-screenshot.png)
+
 - **Granular Logging**: Categorize every transaction (Food, Transport, Bills, etc.).
 - **Custom Categories**: Create and manage unique categories that fit your lifestyle.
 - **Optimistic UI**: Experience zero-latency updates with immediate feedback on additions or deletions.
@@ -27,6 +31,8 @@ BudgetBuddy is a premium, feature-rich personal finance application built with a
 - **Automated Budgeting**: See how your real spending compares to your planned allocations.
 
 ### 🎯 **Financial Goals & Motivation**
+![Financial Goals](public/goals-screenshot.png)
+
 - **Target Tracking**: Set long-term financial targets and monitor progress in real-time.
 - **Visual Progress**: Dynamic progress bars showing current savings vs. the goal amount.
 - **Confetti Completion**: Celebrate your financial milestones with delightful animations upon goal completion.

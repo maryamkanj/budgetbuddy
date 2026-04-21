@@ -8,12 +8,11 @@ interface CategoryChartProps {
 }
 
 const COLORS = [
-  'var(--color-brand-blue)',
-  'var(--color-brand-accent)',
-  'var(--color-chart-3)',
-  'var(--color-brand-muted)',
-  'var(--color-chart-5)',
-  'var(--color-secondary)'
+  'var(--chart-1)', // Blue 600
+  'var(--chart-2)', // Sky 500
+  'var(--chart-3)', // Emerald 500
+  'var(--chart-4)', // Amber 500
+  'var(--chart-5)'  // Slate 400
 ];
 
 export function CategoryChart({ data, currency }: CategoryChartProps) {

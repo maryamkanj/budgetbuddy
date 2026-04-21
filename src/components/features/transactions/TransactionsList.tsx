@@ -200,7 +200,7 @@ export function TransactionsList({
                     <div className="flex items-center gap-4 sm:gap-6 flex-1 min-w-0">
                       <div className={`h-12 w-12 sm:h-14 sm:w-14 rounded-xl flex items-center justify-center flex-shrink-0 transition-all duration-300 group-hover:scale-110 shadow-sm ${transaction.type === 'Spending'
                         ? 'bg-destructive/10 text-destructive'
-                        : 'bg-primary/10 text-primary'
+                        : 'bg-brand-success/10 text-brand-success'
                         }`}>
                         {transaction.type === 'Spending' ? <TrendingDown className="h-6 w-6 sm:h-7 sm:w-7" /> : <TrendingUp className="h-6 w-6 sm:h-7 sm:w-7" />}
                       </div>
@@ -209,7 +209,7 @@ export function TransactionsList({
                           {transaction.category === 'Other' ? (transaction.user_category || 'Other') : transaction.category}
                         </p>
                         <div className="flex items-center gap-2 text-xs text-muted-foreground font-medium">
-                          <Badge variant="outline" className={`h-5 text-[10px] uppercase tracking-widest px-2 font-bold whitespace-nowrap ${transaction.type === 'Spending' ? 'bg-destructive/10 text-destructive border-none' : 'bg-primary/10 text-primary border-none'
+                          <Badge variant="outline" className={`h-5 text-[10px] uppercase tracking-widest px-2 font-bold whitespace-nowrap ${transaction.type === 'Spending' ? 'bg-destructive/10 text-destructive border-none' : 'bg-brand-success/10 text-brand-success border-none'
                             }`}>
                             {transaction.type}
                           </Badge>
@@ -224,7 +224,7 @@ export function TransactionsList({
 
                     <div className="flex flex-row items-center justify-between md:justify-end gap-4 sm:gap-10">
                       <div className="text-left sm:text-right min-w-0 sm:min-w-32">
-                        <p className={`font-mono font-bold text-lg sm:text-2xl tracking-tighter ${transaction.type === 'Spending' ? 'text-foreground' : 'text-primary'
+                        <p className={`font-mono font-bold text-lg sm:text-2xl tracking-tighter ${transaction.type === 'Spending' ? 'text-foreground' : 'text-brand-success'
                           }`}>
                           {transaction.type === 'Spending' ? '-' : '+'}{formatCurrency(transaction.amount, transaction.currency as 'USD' | 'LBP')}
                         </p>

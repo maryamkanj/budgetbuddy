@@ -118,13 +118,13 @@ export function GoalFormModal({
       <DialogContent className="sm:max-w-md text-foreground">
         <DialogHeader>
           <DialogTitle>
-            {editingGoal ? 'Edit Goal' : 'New Goal'}
+            {editingGoal ? 'Edit Stash' : 'New Piggy Stash'}
           </DialogTitle>
         </DialogHeader>
 
         <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="title" className="text-xs font-bold uppercase tracking-widest text-muted-foreground ml-1">Goal Title</Label>
+              <Label htmlFor="title" className="text-xs font-bold uppercase tracking-widest text-muted-foreground ml-1">Stash Title</Label>
               <Input
                 id="title"
                 {...register('title')}
@@ -203,7 +203,7 @@ export function GoalFormModal({
                 type="submit"
                 disabled={isSubmitting}
               >
-                {isSubmitting ? 'Saving...' : (editingGoal ? 'Save Changes' : 'Create Goal')}
+                {isSubmitting ? 'Stashing...' : (editingGoal ? 'Update Stash' : 'Start Stashing')}
               </Button>
             </div>
           </form>

@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { StatCard } from '@/components/common/StatCard';
-import { Target, TrendingUp, CheckCircle2, AlertCircle, Calendar, Edit, Trash2, Plus } from 'lucide-react';
+import { PiggyBank, TrendingUp, CheckCircle2, AlertCircle, Calendar, Edit, Trash2, Plus } from 'lucide-react';
 import { useGoalsPage } from './GoalsClient';
 import { LoadingPage } from '@/components/common/LoadingSpinner';
 
@@ -59,7 +59,7 @@ export function GoalsList({ initialGoals = [] }: { initialGoals?: Database['publ
         <StatCard
           title="Total Goals"
           value={stats.total}
-          icon={Target}
+          icon={PiggyBank}
           iconColor="text-primary"
           iconBgColor="bg-primary/10"
         />
@@ -104,9 +104,9 @@ export function GoalsList({ initialGoals = [] }: { initialGoals?: Database['publ
 
       <div className="space-y-6">
         {filteredGoals.length === 0 ? (
-          <Card className="border-dashed border-2 py-20 bg-card/20 rounded-xl flex flex-col items-center justify-center text-center">
+          <Card className="border-dashed border-2 py-20 bg-card/20 rounded-2xl flex flex-col items-center justify-center text-center">
             <div className="h-20 w-20 rounded-full bg-secondary/50 flex items-center justify-center mb-6">
-              <Target className="h-10 w-10 text-muted-foreground opacity-50" />
+              <PiggyBank className="h-10 w-10 text-muted-foreground opacity-50" />
             </div>
             <h3 className="text-xl font-bold mb-2">No goals found</h3>
             <p className="text-muted-foreground max-w-xs mx-auto mb-8">
@@ -133,13 +133,13 @@ export function GoalsList({ initialGoals = [] }: { initialGoals?: Database['publ
               const deadlineStatus = getDeadlineStatus(goal);
 
               return (
-                <Card key={goal.id} className="group relative border-border bg-card/70 rounded-xl shadow-sm hover:shadow-xl hover:translate-y-[-2px] transition-all duration-300 backdrop-blur-md overflow-hidden">
+                <Card key={goal.id} className="group relative border-border bg-card/70 rounded-2xl shadow-sm hover:shadow-xl hover:translate-y-[-2px] transition-all duration-300 backdrop-blur-md overflow-hidden">
                   <div className="absolute top-4 right-4 z-10">
                     <Badge className={`rounded-lg px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider ${
-                      effectiveStatus === 'Completed' ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' :
-                      effectiveStatus === 'Overdue' || effectiveStatus === 'Failed' ? 'bg-rose-500/10 text-rose-500 border-rose-500/20' :
-                      urgency === 'critical' ? 'bg-orange-500/10 text-orange-500 border-orange-500/20' :
-                      urgency === 'high' ? 'bg-amber-500/10 text-amber-500 border-amber-500/20' :
+                      effectiveStatus === 'Completed' ? 'bg-brand-success/10 text-brand-success border-brand-success/20' :
+                      effectiveStatus === 'Overdue' || effectiveStatus === 'Failed' ? 'bg-destructive/10 text-destructive border-destructive/20' :
+                      urgency === 'critical' ? 'bg-warning/10 text-warning border border-warning/20' :
+                      urgency === 'high' ? 'bg-warning/10 text-warning border border-warning/20' :
                       'bg-primary/10 text-primary border-primary/20'
                     }`}>
                       {effectiveStatus}

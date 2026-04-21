@@ -136,10 +136,9 @@ export function AddGoalButton() {
   return (
     <Button
       onClick={openAddModal}
-      size="lg"
-      className="bg-gradient-to-r from-brand-blue to-brand-accent hover:scale-[1.02] active:scale-[0.98] transition-all text-white font-bold h-14 px-8 rounded-2xl shadow-xl shadow-brand-blue/20 w-full sm:w-auto"
+      className="w-full sm:w-auto bg-gradient-to-br from-primary via-primary/95 to-primary/90 text-white shadow-lg shadow-primary/20 rounded-xl px-8 h-12 font-bold text-sm tracking-tight transition-all hover:translate-y-[-1px] active:translate-y-[0px] hover:shadow-xl hover:shadow-primary/30 flex items-center justify-center gap-2 group"
     >
-      <Plus className="h-5 w-5 mr-2 stroke-[3]" />
+      <Plus className="h-4 w-4 group-hover:rotate-90 transition-transform duration-300" />
       New Goal
     </Button>
   );

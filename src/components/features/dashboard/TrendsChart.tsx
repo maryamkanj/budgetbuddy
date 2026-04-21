@@ -56,8 +56,8 @@ export function TrendsChart({ data, currency }: TrendsChartProps) {
             cursor={{ fill: 'var(--secondary)', opacity: 0.2 }}
           />
           <Legend wrapperStyle={{ color: 'var(--foreground)', fontFamily: 'var(--font-sans)' }} />
-          <Bar dataKey="spending" name="Spending" fill="var(--color-brand-muted)" radius={[4, 4, 0, 0]} />
-          <Bar dataKey="saving" name="Saving" fill="var(--color-brand-blue)" radius={[4, 4, 0, 0]} />
+          <Bar dataKey="spending" name="Spending" fill="var(--destructive)" radius={[4, 4, 0, 0]} />
+          <Bar dataKey="saving" name="Saving" fill="var(--primary)" radius={[4, 4, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>
     </div>

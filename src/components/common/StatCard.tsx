@@ -28,12 +28,15 @@ export function StatCard({
   className
 }: StatCardProps) {
   return (
-    <Card className={cn("border border-white/10 shadow-sm bg-card/70 backdrop-blur-md", className)}>
+    <Card className={cn(
+      "border border-white/5 shadow-sm bg-card/60 backdrop-blur-xl transition-all duration-300 hover:translate-y-[-2px] hover:bg-card/80 hover:border-white/10 group rounded-2xl",
+      className
+    )}>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
           {title}
         </CardTitle>
-        <div className={cn("p-2 rounded-lg backdrop-blur-md", iconBgColor)}>
+        <div className={cn("p-2 rounded-xl backdrop-blur-md", iconBgColor)}>
           <Icon className={cn("h-4 w-4", iconColor)} />
         </div>
       </CardHeader>
@@ -46,7 +49,7 @@ export function StatCard({
             <span className={cn(
               "text-[10px] sm:text-xs font-semibold px-2 py-0.5 rounded-full",
               trend.isPositive !== undefined
-                ? (trend.isPositive ? 'bg-primary/10 text-primary' : 'bg-destructive/10 text-destructive')
+                ? (trend.isPositive ? 'bg-brand-success/10 text-brand-success' : 'bg-destructive/10 text-destructive')
                 : 'bg-muted/10 text-muted-foreground'
             )}>
               {trend.value}

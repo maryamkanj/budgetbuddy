@@ -140,10 +140,10 @@ export function AddTransactionButton() {
   return (
     <Button
       onClick={openAddModal}
-      className="w-full sm:w-auto bg-gradient-to-r from-brand-blue to-brand-accent text-white hover:brightness-110 shadow-xl shadow-brand-blue/30 px-6 sm:px-10 py-5 sm:py-7 rounded-xl sm:rounded-[20px] text-base sm:text-lg font-bold transition-all hover:scale-[1.02] active:scale-[0.98] group"
+      className="w-full sm:w-auto bg-gradient-to-br from-primary via-primary/95 to-primary/90 text-white shadow-lg shadow-primary/20 rounded-xl px-8 h-12 font-bold text-sm tracking-tight transition-all hover:translate-y-[-1px] active:translate-y-[0px] hover:shadow-xl hover:shadow-primary/30 flex items-center justify-center gap-2 group"
     >
-      <Plus className="h-5 w-5 sm:h-6 sm:w-6 mr-2 sm:mr-3 group-hover:rotate-90 transition-transform duration-300" />
-      Add Transaction
+      <Plus className="h-4 w-4 group-hover:rotate-90 transition-transform duration-300" />
+      Create Transaction
     </Button>
   );
 }

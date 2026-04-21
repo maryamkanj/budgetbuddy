@@ -3,7 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Database } from '@/types/database';
-import { Target, Calendar, DollarSign, Edit, Trash2 } from 'lucide-react';
+import { PiggyBank, Calendar, DollarSign, Edit, Trash2 } from 'lucide-react';
 import { useGoals } from '@/providers/GoalProvider';
 import Link from 'next/link';
 import { toast } from 'sonner';
@@ -38,21 +38,21 @@ export function GoalsProgress({ goals, limit = 3 }: GoalsProgressProps) {
 
   if (activeGoals.length === 0) {
     return (
-      <Card>
+      <Card className="rounded-2xl border-dashed">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Target className="h-5 w-5 text-primary" />
-            Financial Goals
+            <PiggyBank className="h-5 w-5 text-primary" />
+            Savings Goals
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="text-center py-6">
             <p className="text-muted-foreground mb-4">
-              No active goals. Set your first financial goal to get started!
+              Setting your first goal is the first step to successful saving.
             </p>
             <Link href="/goals">
               <button className="text-sm text-primary hover:underline font-medium">
-                Add Goal
+                Set First Goal
               </button>
             </Link>
           </div>
@@ -62,11 +62,11 @@ export function GoalsProgress({ goals, limit = 3 }: GoalsProgressProps) {
   }
 
   return (
-    <Card className="border-border shadow-sm">
+    <Card className="border-border shadow-sm rounded-2xl">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <Target className="h-5 w-5 text-primary" />
-          Financial Goals
+          <PiggyBank className="h-5 w-5 text-primary" />
+          Savings Goals
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -77,18 +77,18 @@ export function GoalsProgress({ goals, limit = 3 }: GoalsProgressProps) {
           const deadlineStatus = getDeadlineStatus(goal);
 
           return (
-            <div key={goal.id} className="space-y-3 p-3 sm:p-4 border border-white/5 rounded-xl sm:rounded-2xl bg-card/40 hover:bg-card/60 transition-all duration-300 group relative overflow-hidden">
+            <div key={goal.id} className="space-y-3 p-3 sm:p-4 border border-white/5 rounded-2xl bg-card/40 hover:bg-card/60 transition-all duration-300 group relative overflow-hidden">
               <div className="absolute top-0 right-0 p-2 opacity-5 pointer-events-none">
-                <Target className="h-12 w-12 text-primary" />
+                <PiggyBank className="h-12 w-12 text-primary" />
               </div>
               <div className="flex justify-between items-start relative z-10">
                 <h4 className="font-semibold text-sm truncate pr-2">{goal.title}</h4>
                 <div className="flex items-center gap-2 shrink-0">
                   {daysRemaining !== null && (
                     <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${
-                      urgency === 'critical' ? 'bg-rose-500/10 text-rose-500 border border-rose-500/20' :
-                      urgency === 'high' ? 'bg-orange-500/10 text-orange-500 border border-orange-500/20' :
-                      urgency === 'medium' ? 'bg-amber-500/10 text-amber-500 border border-amber-500/20' :
+                      urgency === 'critical' ? 'bg-destructive/10 text-destructive border border-destructive/20' :
+                      urgency === 'high' ? 'bg-destructive/10 text-destructive border border-destructive/20' :
+                      urgency === 'medium' ? 'bg-warning/10 text-warning border border-warning/20' :
                       'bg-muted/10 text-muted-foreground'
                     }`}>
                       {deadlineStatus}
@@ -100,7 +100,7 @@ export function GoalsProgress({ goals, limit = 3 }: GoalsProgressProps) {
                         <Edit className="h-3 w-3 text-muted-foreground hover:text-primary cursor-pointer" />
                       </Link>
                       <Trash2
-                        className="h-3 w-3 text-muted-foreground hover:text-muted-foreground cursor-pointer"
+                        className="h-3 w-3 text-muted-foreground hover:text-destructive cursor-pointer"
                         onClick={() => setGoalToDelete(goal.id)}
                       />
                     </div>
@@ -111,7 +111,7 @@ export function GoalsProgress({ goals, limit = 3 }: GoalsProgressProps) {
               <Progress 
                 value={progress} 
                 className={`h-1.5 ${
-                  urgency === 'critical' ? 'bg-rose-500/20' : 'bg-white/5'
+                  urgency === 'critical' || urgency === 'high' ? 'bg-destructive/20' : 'bg-brand-success/20'
                 }`} 
               />
 
@@ -122,14 +122,14 @@ export function GoalsProgress({ goals, limit = 3 }: GoalsProgressProps) {
                 </div>
                 <div className="flex items-center gap-1.5 shrink-0">
                   <Calendar className="h-3 w-3" />
-                  <span className={daysRemaining !== null && daysRemaining < 0 ? 'text-rose-400' : ''}>
+                  <span className={daysRemaining !== null && daysRemaining < 0 ? 'text-destructive' : ''}>
                     {formatDate(goal.deadline)}
                   </span>
                 </div>
               </div>
 
               <div className={`text-right text-[10px] font-bold uppercase tracking-tighter ${
-                urgency === 'critical' ? 'text-rose-400' : 'text-primary'
+                urgency === 'critical' || urgency === 'high' ? 'text-destructive' : 'text-brand-success'
               }`}>
                 {progress.toFixed(1)}% ACHIEVED
               </div>

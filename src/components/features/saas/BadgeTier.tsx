@@ -12,11 +12,11 @@ export function TierBadge({ tier, size = 'md', showIcon = true, className = '' }
   const getTierStyles = (tier: string) => {
     switch (tier) {
       case 'Pro':
-        return 'bg-purple-100 text-purple-800 border-purple-200';
+        return 'bg-primary/10 text-primary border-primary/20';
       case 'Business':
-        return 'bg-orange-100 text-orange-800 border-orange-200';
+        return 'bg-amber-500/10 text-amber-500 border-amber-500/20';
       default:
-        return 'bg-gray-100 text-gray-800 border-gray-200';
+        return 'bg-muted/50 text-muted-foreground border-white/5';
     }
   };
 

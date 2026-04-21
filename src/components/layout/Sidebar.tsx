@@ -11,7 +11,7 @@ import {
   X,
   Home,
   CreditCard,
-  Target,
+  PiggyBank,
   Settings,
   LogOut,
   DollarSign,
@@ -28,7 +28,7 @@ import { useSubscription } from '@/providers/SubscriptionProvider';
 const navigation = [
   { name: 'Dashboard', href: '/', icon: Home },
   { name: 'Transactions', href: '/transactions', icon: CreditCard },
-  { name: 'Goals', href: '/goals', icon: Target },
+  { name: 'Goals', href: '/goals', icon: PiggyBank },
   { name: 'Salaries', href: '/salaries', icon: DollarSign },
   { name: 'Reports', href: '/reports', icon: FileText },
   {
@@ -89,8 +89,17 @@ export default function Sidebar() {
         </Button>
       </div>
 
+      {/* Mobile Menu Backdrop Overlay */}
+      {mobileMenuOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-black/60 lg:hidden backdrop-blur-sm transition-opacity duration-300"
+          onClick={() => setMobileMenuOpen(false)}
+        />
+      )}
+
+      {/* Sidebar Container */}
       <div className={`
-        fixed inset-y-0 left-0 z-mobile-nav w-64 bg-background border-r border-border shadow-lg transform transition-transform duration-300
+        fixed inset-y-0 left-0 z-50 w-64 bg-background border-r border-border shadow-2xl transform transition-transform duration-300 ease-in-out
         lg:translate-x-0 lg:static lg:flex lg:flex-col lg:h-screen
         ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}
       `}>
@@ -228,12 +237,6 @@ export default function Sidebar() {
         </div>
       </div>
 
-      {mobileMenuOpen && (
-        <div
-          className="fixed inset-0 z-mobile-nav bg-black/40 lg:hidden backdrop-blur-sm"
-          onClick={() => setMobileMenuOpen(false)}
-        />
-      )}
     </>
   );
 }

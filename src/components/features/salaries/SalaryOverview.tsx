@@ -60,7 +60,7 @@ export function SalaryOverview({
   };
 
   return (
-    <Card className="border border-white/10 shadow-sm bg-card/70 backdrop-blur-md">
+    <Card className="border border-white/10 shadow-sm bg-card/70 backdrop-blur-md rounded-2xl">
       <CardHeader className="pb-4">
         <div className="flex justify-between items-start gap-4">
           <div>
@@ -116,16 +116,16 @@ export function SalaryOverview({
             </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-0">
               {/* Allocation Form Container */}
-              <Card className="border border-white/10 shadow-sm bg-card/70 backdrop-blur-md rounded-r-none">
+              <Card className="border border-white/10 shadow-sm bg-card/70 backdrop-blur-md rounded-2xl lg:rounded-r-none">
                 <CardHeader className="pb-4">
-                  <CardTitle className="text-lg flex items-center gap-2">
+                  <CardTitle className="text-lg flex items-center gap-2 font-bold">
                     <DollarSign className="h-5 w-5 text-primary" />
                     Add Allocation
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="pt-0 h-full">
+                <CardContent className="pt-0 h-full pb-6">
                   <AllocationForm 
                     salary={selectedSalary} 
                     allocations={allocations} 
@@ -136,9 +136,9 @@ export function SalaryOverview({
               </Card>
               
               {/* Pie Chart Container */}
-              <Card className="border border-white/10 shadow-sm bg-card/70 backdrop-blur-md rounded-l-none border-l-0">
+              <Card className="border border-white/10 shadow-sm bg-card/70 backdrop-blur-md rounded-2xl lg:rounded-l-none lg:border-l-0">
                 <CardHeader className="pb-4">
-                  <CardTitle className="text-lg flex items-center gap-2">
+                  <CardTitle className="text-lg flex items-center gap-2 font-bold">
                     <PieChart className="h-5 w-5 text-primary" />
                     Allocation Distribution
                   </CardTitle>

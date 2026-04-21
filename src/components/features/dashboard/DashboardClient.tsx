@@ -10,7 +10,7 @@ import { TrendsChart } from '@/components/features/dashboard/TrendsChart';
 import { GoalsProgress } from '@/components/features/dashboard/GoalsProgress';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { TrendingUp, Target, CreditCard, Edit, Trash2, PieChart } from 'lucide-react';
+import { TrendingUp, PiggyBank, CreditCard, Edit, Trash2, PieChart } from 'lucide-react';
 import { formatCurrency } from '@/lib/utils/financial';
 import Link from 'next/link';
 import { TierBadge } from '@/components/features/saas/BadgeTier';
@@ -21,6 +21,7 @@ import { useGoals } from '@/providers/GoalProvider';
 import { useSalaries } from '@/providers/SalaryProvider';
 import { DeleteConfirmModal } from '@/components/common/DeleteConfirmModal';
 import { toast } from 'sonner';
+import { cn } from '@/lib/utils';
 import { LoadingPage } from '@/components/common/LoadingSpinner';
 
 interface DashboardClientProps {
@@ -129,10 +130,10 @@ export function DashboardClient({
                 {transactions.slice(0, 5).map((transaction) => (
                   <div
                     key={transaction.id}
-                    className="group flex items-center justify-between p-3 rounded-lg hover:bg-white/5 transition-all duration-300 border border-transparent hover:border-white/5"
+                    className="group flex items-center justify-between p-3 rounded-2xl hover:bg-white/5 transition-all duration-300 border border-transparent hover:border-white/5 hover:translate-x-1"
                   >
                     <div className="flex items-center gap-4">
-                      <div className={`p-2 rounded-full ${transaction.type === 'Saving' ? 'bg-primary/10 text-primary' : 'bg-muted text-foreground'}`} />
+                      <div className={`p-2 rounded-full transition-colors ${transaction.type === 'Saving' ? 'bg-brand-success/10 text-brand-success' : 'bg-muted text-muted-foreground group-hover:bg-destructive/10 group-hover:text-destructive'}`} />
                       <div className="min-w-0 flex-1">
                         <p className="font-medium text-sm truncate">
                           {transaction.category === 'Other' ? (transaction.user_category || 'Other') : transaction.category}
@@ -144,7 +145,7 @@ export function DashboardClient({
                     </div>
                     <div className="flex items-center gap-3">
                       <div className="text-right">
-                        <p className={`font-mono font-bold text-sm ${transaction.type === 'Saving' ? 'text-primary' : 'text-foreground'}`}>
+                        <p className={`font-mono font-bold text-sm ${transaction.type === 'Saving' ? 'text-brand-success' : 'text-foreground'}`}>
                           {transaction.type === 'Saving' ? '+' : '-'}
                           {formatCurrency(transaction.amount, transaction.currency)}
                         </p>
@@ -186,7 +187,7 @@ export function DashboardClient({
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <TrendingUp className="h-5 w-5 text-primary" />
-                Quick Stats
+                Financial Metrics
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -212,7 +213,7 @@ export function DashboardClient({
           <Card className="border-border shadow-sm">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Target className="h-5 w-5 text-primary" />
+                <PiggyBank className="h-5 w-5 text-primary" />
                 Budget Overview
               </CardTitle>
             </CardHeader>
@@ -242,9 +243,14 @@ export function DashboardClient({
                   </div>
                 </div>
                 {salary && (
-                  <div className="w-full bg-muted rounded-full h-2">
+                  <div className="w-full bg-muted rounded-full h-2 relative overflow-hidden">
                     <div
-                      className="h-full bg-primary rounded-full transition-all duration-500"
+                      className={cn(
+                        "h-full rounded-full transition-all duration-700 ease-in-out",
+                        (summary.totalSpending / salary.base_salary) > 0.9 ? "bg-destructive shadow-[0_0_10px_rgba(239,68,68,0.3)]" :
+                        (summary.totalSpending / salary.base_salary) > 0.7 ? "bg-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.3)]" :
+                        "bg-primary shadow-[0_0_10px_rgba(37,99,235,0.3)]"
+                      )}
                       style={{ width: `${Math.min((summary.totalSpending / salary.base_salary) * 100, 100)}%` }}
                     />
                   </div>
@@ -256,7 +262,7 @@ export function DashboardClient({
           <Card className="border-border shadow-sm">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Target className="h-5 w-5 text-primary" />
+                <PiggyBank className="h-5 w-5 text-primary" />
                 Salary Management
               </CardTitle>
             </CardHeader>
@@ -269,8 +275,8 @@ export function DashboardClient({
                       {formatCurrency(salary.base_salary, salary.currency)}
                     </span>
                   </div>
-                  <Link href="/salaries">
-                    <Button variant="outline" className="w-full border-border">
+                  <Link href="/salaries" className="w-full">
+                    <Button variant="outline" className="w-full h-11 rounded-xl border-border hover:bg-white/5 font-semibold text-xs uppercase tracking-widest transition-all">
                       Manage Salary
                     </Button>
                   </Link>
@@ -280,8 +286,8 @@ export function DashboardClient({
                   <p className="text-muted-foreground text-sm">
                     Set up your salary to start budget planning
                   </p>
-                  <Link href="/salaries">
-                    <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground">
+                  <Link href="/salaries" className="w-full">
+                    <Button className="w-full bg-gradient-to-br from-primary via-primary/95 to-primary/90 text-white shadow-lg shadow-primary/20 rounded-xl px-8 h-11 font-bold text-sm tracking-tight transition-all hover:translate-y-[-1px] active:translate-y-[0px] hover:shadow-xl hover:shadow-primary/30 flex items-center justify-center gap-2 group">
                       Set Salary
                     </Button>
                   </Link>

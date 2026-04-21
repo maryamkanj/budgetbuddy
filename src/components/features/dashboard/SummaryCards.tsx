@@ -1,6 +1,6 @@
 'use client';
 
-import { TrendingUp, TrendingDown, Target, DollarSign } from 'lucide-react';
+import { TrendingUp, TrendingDown, PiggyBank, DollarSign } from 'lucide-react';
 import { FinancialNumber } from '@/components/common/FinancialNumber';
 import { StatCard } from '@/components/common/StatCard';
 
@@ -34,8 +34,8 @@ export function SummaryCards({
         title="Total Saving"
         value={<FinancialNumber amount={totalSaving} currency={currency} />}
         icon={TrendingUp}
-        iconColor="text-primary"
-        iconBgColor="bg-primary/10"
+        iconColor="text-brand-success"
+        iconBgColor="bg-brand-success/10"
         description="THIS MONTH"
       />
 
@@ -55,7 +55,7 @@ export function SummaryCards({
       <StatCard
         title="Active Goals"
         value={activeGoals}
-        icon={Target}
+        icon={PiggyBank}
         iconColor="text-accent"
         iconBgColor="bg-accent/10"
         description="IN PROGRESS"

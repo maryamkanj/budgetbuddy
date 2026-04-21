@@ -1,8 +1,7 @@
 import { Card, CardContent } from '@/components/ui/card';
-import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { TrendingUp, AlertTriangle, Plus } from 'lucide-react';
+import { TrendingUp, AlertTriangle} from 'lucide-react';
 import Link from 'next/link';
 import { useSubscription } from '@/providers/SubscriptionProvider';
 
@@ -49,68 +48,64 @@ export function UsageMeter({
   };
 
   const getProgressColor = () => {
-    if (isAtLimit) return 'bg-destructive';
-    if (isNearLimit) return 'bg-accent';
-    return 'bg-primary';
+    if (isAtLimit) return 'bg-destructive shadow-[0_0_10px_rgba(239,68,68,0.3)]';
+    if (isNearLimit) return 'bg-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.3)]';
+    return 'bg-primary shadow-[0_0_10px_rgba(37,99,235,0.3)]';
   };
 
   const getBadgeVariant = () => {
     if (isAtLimit) return 'destructive';
-    if (isNearLimit) return 'secondary';
+    if (isNearLimit) return 'outline';
     return 'default';
   };
 
   const getBadgeText = () => {
     if (isAtLimit) return 'Limit Reached';
     if (isNearLimit) return 'Near Limit';
-    return 'Normal';
+    return 'Active';
   };
 
   return (
-    <Card className={`border-border shadow-sm ${getSizeStyles(size)} ${className}`}>
+    <Card className={`border-border shadow-sm rounded-2xl bg-card/60 backdrop-blur-md ${getSizeStyles(size)} ${className}`}>
       <CardContent className="p-0">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
             {icon}
-            <h3 className="font-semibold text-foreground">{title}</h3>
+            <h3 className="font-bold text-sm text-foreground uppercase tracking-wider">{title}</h3>
           </div>
-          <Badge variant={getBadgeVariant()} className="text-xs">
+          <Badge variant={getBadgeVariant()} className="text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded-lg">
             {getBadgeText()}
           </Badge>
         </div>
 
         <div className="space-y-3">
-          <div className="flex justify-between text-sm">
-            <span className="text-muted-foreground">
+          <div className="flex justify-between text-xs font-mono">
+            <span className="text-muted-foreground font-medium">
               {current.toLocaleString()} / {limit.toLocaleString()} {unit}
             </span>
-            <span className={`font-medium ${isAtLimit ? 'text-destructive font-bold' :
-                isNearLimit ? 'text-accent' :
-                  'text-foreground'
+            <span className={`font-black ${isAtLimit ? 'text-destructive' :
+                isNearLimit ? 'text-amber-500' :
+                  'text-primary'
               }`}>
               {displayPercentage}%
             </span>
           </div>
 
-          <div className="relative">
-            <Progress
-              value={barPercentage}
-              className="h-2"
-            />
+          <div className="relative h-2 w-full bg-white/5 rounded-full overflow-hidden">
             <div
-              className={`absolute top-0 left-0 h-2 rounded-full transition-all duration-300 ${getProgressColor()}`}
+              className={`h-full rounded-full transition-all duration-1000 ease-out ${getProgressColor()}`}
               style={{ width: `${barPercentage}%` }}
             />
           </div>
 
           {(isNearLimit || isAtLimit) && (
-            <div className={`flex items-start gap-2 text-sm ${isAtLimit ? 'text-destructive font-medium' : 'text-accent'
+            <div className={`flex items-start gap-2 text-[11px] leading-tight ${isAtLimit ? 'text-destructive font-bold' : 'text-amber-500 font-medium'
               }`}>
-              <AlertTriangle className="h-4 w-4 mt-0.5 flex-shrink-0" />
+              <AlertTriangle className="h-3.5 w-3.5 mt-0.5 flex-shrink-0" />
               <span>
                 {isAtLimit
-                  ? `You've reached your ${unit} limit. Upgrade to continue adding more.`
-                  : `You're approaching your ${unit} limit. Consider upgrading soon.`
+                  ? `Limit reached. Upgrade to unlock more.`
+                  : `Approaching limit. Consider upgrading.`
                 }
               </span>
             </div>
@@ -118,9 +113,8 @@ export function UsageMeter({
 
           {showUpgradeButton && (isNearLimit || isAtLimit) && (
             <div className="pt-2">
-              <Link href={upgradeLink}>
-                <Button size="sm" className="w-full">
-                  <Plus className="h-4 w-4 mr-2" />
+              <Link href={upgradeLink} className="block w-full">
+                <Button className="w-full bg-gradient-to-br from-primary via-primary/95 to-primary/90 text-white shadow-lg shadow-primary/20 rounded-xl px-4 h-9 text-[11px] font-black uppercase tracking-widest transition-all">
                   Upgrade Plan
                 </Button>
               </Link>
